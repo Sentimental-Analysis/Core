@@ -8,4 +8,4 @@ dependencies:
     - dotnet restore
 test:
   override:
-    - dotnet test ./test/Domain.Tests
+    - dotnet test ./test/Core.Tests
