@@ -1,4 +1,5 @@
-﻿using Core.Cache.Implementations;
+﻿using System;
+using Core.Cache.Implementations;
 using Core.Cache.Interfaces;
 using Core.Database.Interfaces;
 using Core.Models;
@@ -36,6 +37,7 @@ namespace Core.UnitOfWork.Implementations
                 _shouldBeDisposed = false;
                 _dbContext?.Dispose();
                 Cache?.Dispose();
+                GC.SuppressFinalize(this);
             }
         }
     }

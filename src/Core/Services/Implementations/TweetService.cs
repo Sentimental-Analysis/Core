@@ -59,6 +59,7 @@ namespace Core.Services.Implementations
             {
                 _shouldBeDisposed = false;
                 _unitOfWork?.Dispose();
+                GC.SuppressFinalize(this);
             }
         }
     }
