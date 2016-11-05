@@ -56,5 +56,5 @@ exec { & dotnet restore }
 
 & Invoke-MSBuild
 
-exec { & dotnet pack .\src\Domain -c Release -o .\artifacts }
-exec { & dotnet test .\test\Domain.Tests -c Release }
+exec { & dotnet pack .\src\Core -c Release -o .\artifacts }
+exec { & dotnet test .\test\Core.Tests -c Release }
