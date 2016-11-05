@@ -2,7 +2,7 @@
 
 namespace Core.Models
 {
-    public class Tweet
+    public class Tweet : IEntity
     {
         public string Id { get; set; }
         public string Text { get; set; }
