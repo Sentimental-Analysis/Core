@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Core.Models;
 
 namespace Core.Services.Interfaces
@@ -6,6 +7,6 @@ namespace Core.Services.Interfaces
     public interface ITweetService : IService
     {
         Result<IEnumerable<Tweet>> GetTweetByKey(string key);
-        Result<IEnumerable<Tweet>> GetTweetByKeyAsync(string key);
+        Task<Result<IEnumerable<Tweet>>> GetTweetByKeyAsync(string key);
     }
 }

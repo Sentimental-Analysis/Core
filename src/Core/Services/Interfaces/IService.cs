@@ -1,6 +1,8 @@
-﻿namespace Core.Services.Interfaces
+﻿using System;
+
+namespace Core.Services.Interfaces
 {
-    public interface IService
+    public interface IService : IDisposable
     {
 
     }
