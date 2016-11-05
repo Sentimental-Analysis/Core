@@ -75,4 +75,3 @@ namespace Core.Tests.Models
         }
     }
 }
-}
