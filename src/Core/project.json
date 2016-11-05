@@ -1,0 +1,25 @@
+{
+    "version": "1.0.0-*",
+    "dependencies": {
+        "Microsoft.NETCore.App": {
+            "version": "1.0.1",
+            "type": "platform"
+        },
+        "LanguageExt.Core": "1.9.3",
+        "LanguageExt.FSharp": "1.9.3",
+        "Microsoft.Extensions.Caching.Abstractions": "1.0.0",
+        "Microsoft.Extensions.Caching.Memory": "1.0.0",
+        "Newtonsoft.Json": "9.0.1"
+    },
+    "frameworks": {
+        "netcoreapp1.0": {
+            "imports": [
+                "dotnet5.6",
+                "portable-net45+win8"
+            ]
+        }
+    },
+    "tooling": {
+        "defaultNamespace": "Core"
+    }
+}
