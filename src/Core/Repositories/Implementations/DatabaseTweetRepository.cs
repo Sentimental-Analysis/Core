@@ -5,9 +5,9 @@ using Core.Repositories.Interfaces;
 
 namespace Core.Repositories.Implementations
 {
-    public class TweetRepository : Repository<Tweet>, ITweetRepository
+    public class DatabaseTweetRepository : Repository<Tweet>, ITweetRepository
     {
-        public TweetRepository(IDbContext dbManager) : base(dbManager)
+        public DatabaseTweetRepository(IDbContext dbManager) : base(dbManager)
         {
         }
     }
