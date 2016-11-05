@@ -2,7 +2,7 @@
 using Core.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Core.Database.Implementations
+namespace Core.Database.Interfaces
 {
     public interface IDbContext: IDisposable
     {
