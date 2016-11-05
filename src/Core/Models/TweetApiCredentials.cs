@@ -1,6 +1,8 @@
-﻿namespace Core.Models
+﻿using Tweetinvi.Models;
+
+namespace Core.Models
 {
-    public class TweetApiCredentials
+    public class TweetApiCredentials : ITwitterCredentials
     {
         public string ConsumerKey { get; set; }
         public string AccessToken { get; set; }

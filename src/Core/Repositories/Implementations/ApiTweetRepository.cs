@@ -4,11 +4,22 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Core.Models;
 using Core.Repositories.Interfaces;
+using Tweetinvi;
+using Tweetinvi.Models;
+using Tweet = Core.Models.Tweet;
 
 namespace Core.Repositories.Implementations
 {
     public class ApiTweetRepository : ITweetRepository
     {
+        private readonly ITwitterCredentials _credentials;
+
+        public ApiTweetRepository(TwitterCredentials credentials)
+        {
+            _credentials = Auth.SetUserCredentials(credentials.ConsumerKey, credentials.ConsumerSecret,
+                credentials.AccessToken, credentials.AccessTokenSecret);
+        }
+
         public IEnumerable<Tweet> Find(Expression<Func<Tweet, bool>> predicate)
         {
             throw new NotImplementedException();
