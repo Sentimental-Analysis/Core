@@ -16,7 +16,7 @@ namespace Core.Repositories.Implementations
     {
         private readonly ITwitterCredentials _credentials;
 
-        public ApiTweetRepository(TwitterCredentials credentials)
+        public ApiTweetRepository(Core.Models.TwitterApiCredentials credentials)
         {
             _credentials = Auth.SetUserCredentials(credentials.ConsumerKey, credentials.ConsumerSecret,
                 credentials.AccessToken, credentials.AccessTokenSecret);
