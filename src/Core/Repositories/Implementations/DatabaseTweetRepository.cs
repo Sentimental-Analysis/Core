@@ -12,7 +12,7 @@ namespace Core.Repositories.Implementations
         {
         }
 
-        public IEnumerable<Tweet> FindByKey(string query)
+        public IEnumerable<Tweet> FindByKey(string query, int count)
         {
             throw new System.NotImplementedException();
         }

@@ -5,6 +5,6 @@ namespace Core.Repositories.Interfaces
 {
     public interface ITweetRepository : IRepository<Tweet>
     {
-        IEnumerable<Tweet> FindByKey(string query);
+        IEnumerable<Tweet> FindByKey(string query, int count);
     }
 }
