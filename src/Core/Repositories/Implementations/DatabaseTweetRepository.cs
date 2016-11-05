@@ -1,4 +1,5 @@
-﻿using Core.Database.Interfaces;
+﻿using System.Collections.Generic;
+using Core.Database.Interfaces;
 using Core.Models;
 using Core.Repositories.Abstractions;
 using Core.Repositories.Interfaces;
@@ -9,6 +10,11 @@ namespace Core.Repositories.Implementations
     {
         public DatabaseTweetRepository(IDbContext dbManager) : base(dbManager)
         {
+        }
+
+        public IEnumerable<Tweet> FindByKey(string query)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

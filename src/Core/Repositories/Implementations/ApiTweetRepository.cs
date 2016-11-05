@@ -59,5 +59,10 @@ namespace Core.Repositories.Implementations
         {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<Tweet> FindByKey(string query)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
