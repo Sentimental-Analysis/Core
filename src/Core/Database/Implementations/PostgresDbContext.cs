@@ -8,7 +8,7 @@ namespace Core.Database.Implementations
     {
         public DbSet<Tweet> Tweets { get; set; }
 
-        public DefaultDbContext(DbContextOptions options) : base(options)
+        public PostgresDbContext(DbContextOptions options) : base(options)
         {
         }
     }
