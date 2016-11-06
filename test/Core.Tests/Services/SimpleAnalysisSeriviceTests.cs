@@ -10,11 +10,11 @@ using static Core.Tests.Builders.TweetBuilder;
 
 namespace Core.Tests.Services
 {
-    public class SimpleAnalysisSerivice : TestWithData
+    public class SimpleAnalysisSeriviceTests : TestWithData
     {
         private readonly SimpleAnalysisService _simpleAnalysisService;
 
-        public SimpleAnalysisSerivice()
+        public SimpleAnalysisSeriviceTests()
         {
             var dictionary = ImmutableDictionary<string, int>.Empty.Add("love", 5).Add("hate", -5);
             _simpleAnalysisService = new SimpleAnalysisService(dictionary);

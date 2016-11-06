@@ -34,7 +34,7 @@ namespace Core.Services.Implementations
         private Tweet AnalyzeOne(Tweet tweet)
         {
             var result =
-                tweet.Text.Split(' ').Select(x => Regex.Replace(x, @"\w", "").ToLower()).Aggregate(Tuple.Create(0, ""),
+                tweet.Text.Split(' ').Select(x => Regex.Replace(x, @"\W", "").ToLower()).Aggregate(Tuple.Create(0, ""),
                     (acc, x) =>
                     {
                         int score;
@@ -43,7 +43,7 @@ namespace Core.Services.Implementations
                             int finalscore = Text.IsNegate(acc.Item2) ? -score : score;
                             return Tuple.Create(acc.Item1 + finalscore, x);
                         }
-                        return acc;
+                        return Tuple.Create(acc.Item1, x);
                     });
             return tweet.WithNewSentiment(result.Item1);
         }
