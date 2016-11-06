@@ -48,7 +48,7 @@ namespace Core.Services.Implementations
 
             return await _unitOfWork.Cache.GetOrStoreAsync(cacheKey, async () =>
             {
-                var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000));
+                var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000)).ToList();
 
                 if (!dbResult.Any())
                 {
@@ -61,7 +61,7 @@ namespace Core.Services.Implementations
                     }
                     return Result<IEnumerable<Tweet>>.Error();
                 }
-                return Result<IEnumerable<Tweet>>.Wrap(dbResult);
+                return Result<IEnumerable<Tweet>>.Wrap(dbResult.AsEnumerable());
             }, TimeSpan.FromDays(1));
         }
 
