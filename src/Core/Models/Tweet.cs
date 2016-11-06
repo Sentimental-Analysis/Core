@@ -1,5 +1,4 @@
 ﻿using System;
-using Tweetinvi.Models;
 
 namespace Core.Models
 {
