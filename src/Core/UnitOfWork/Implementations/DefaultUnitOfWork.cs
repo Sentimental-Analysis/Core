@@ -11,7 +11,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Core.UnitOfWork.Implementations
 {
-    public sealed class DefaultUnitOfWork : IUnitOfWork
+    public class DefaultUnitOfWork : IUnitOfWork
     {
         private readonly IDbContext _dbContext;
         private bool _shouldBeDisposed = true;
