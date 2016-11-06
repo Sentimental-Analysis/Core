@@ -21,36 +21,48 @@ namespace Core.Services.Implementations
 
         public Result<IEnumerable<Tweet>> GetTweetByKey(string key)
         {
-            var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000))?.ToList();
-            if (!dbResult.Any())
+            string cacheKey = _unitOfWork.Cache.GenerateKey(nameof(TweetService), nameof(GetTweetByKeyAsync), key);
+
+            return _unitOfWork.Cache.GetOrStore(cacheKey, () =>
             {
-                var apiResult = _unitOfWork.ApiTweets.FindByKey(new TweetQuery(key));
-                var analyzedTweets = _unitOfWork.SentimentalAnalysis.Analyze(apiResult);
-                if (analyzedTweets.IsSuccess)
+                var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000))?.ToList();
+
+                if (!dbResult.Any())
                 {
-                    _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
-                    return analyzedTweets;
+                    var apiResult = _unitOfWork.ApiTweets.FindByKey(new TweetQuery(key));
+                    var analyzedTweets = _unitOfWork.SentimentalAnalysis.Analyze(apiResult);
+                    if (analyzedTweets.IsSuccess)
+                    {
+                        _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
+                        return analyzedTweets;
+                    }
+                    return Result<IEnumerable<Tweet>>.Error();
                 }
-                return Result<IEnumerable<Tweet>>.Error();
-            }
-            return Result<IEnumerable<Tweet>>.Wrap(dbResult.AsEnumerable());
+                return Result<IEnumerable<Tweet>>.Wrap(dbResult.AsEnumerable());
+            }, TimeSpan.FromDays(1));
         }
 
         public async Task<Result<IEnumerable<Tweet>>> GetTweetByKeyAsync(string key)
         {
-            var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000))?.ToList();
-            if (!dbResult.Any())
+            string cacheKey = _unitOfWork.Cache.GenerateKey(nameof(TweetService), nameof(GetTweetByKeyAsync), key);
+
+            return await _unitOfWork.Cache.GetOrStoreAsync(cacheKey, async () =>
             {
-                var apiResult = _unitOfWork.ApiTweets.FindByKey(new TweetQuery(key));
-                var analyzedTweets = await _unitOfWork.SentimentalAnalysis.AnalyzeAsync(apiResult);
-                if (analyzedTweets.IsSuccess)
+                var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000))?.ToList();
+
+                if (!dbResult.Any())
                 {
-                    _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
-                    return analyzedTweets;
+                    var apiResult = _unitOfWork.ApiTweets.FindByKey(new TweetQuery(key));
+                    var analyzedTweets = await _unitOfWork.SentimentalAnalysis.AnalyzeAsync(apiResult);
+                    if (analyzedTweets.IsSuccess)
+                    {
+                        _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
+                        return analyzedTweets;
+                    }
+                    return Result<IEnumerable<Tweet>>.Error();
                 }
-                return Result<IEnumerable<Tweet>>.Error();
-            }
-            return Result<IEnumerable<Tweet>>.Wrap(dbResult.AsEnumerable());
+                return Result<IEnumerable<Tweet>>.Wrap(dbResult.AsEnumerable());
+            }, TimeSpan.FromDays(1));
         }
 
         public void Dispose()
