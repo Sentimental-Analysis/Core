@@ -7,7 +7,8 @@ namespace Core.Tests.Mocks
     {
         public Mock<IMemoryCache> Mock()
         {
-            throw new System.NotImplementedException();
+            var mock = new Mock<IMemoryCache>();
+            return mock;
         }
     }
 }

@@ -7,7 +7,8 @@ namespace Core.Tests.Mocks
     {
         public Mock<ISentimentalAnalysisService> Mock()
         {
-            throw new System.NotImplementedException();
+            var mock = new Mock<ISentimentalAnalysisService>();
+            return mock;
         }
     }
 }
