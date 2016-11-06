@@ -7,5 +7,9 @@ namespace Core.Database.Implementations
     public class PostgresDbContext : DbContext, IDbContext
     {
         public DbSet<Tweet> Tweets { get; set; }
+
+        public PostgresDbContext(DbContextOptions options) : base(options)
+        {
+        }
     }
 }
