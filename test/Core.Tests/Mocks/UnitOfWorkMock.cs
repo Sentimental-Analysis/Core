@@ -1,4 +1,5 @@
-﻿using Core.Repositories.Interfaces;
+﻿using Core.Cache.Interfaces;
+using Core.Repositories.Interfaces;
 using Core.Services.Interfaces;
 using Core.UnitOfWork.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
@@ -11,10 +12,10 @@ namespace Core.Tests.Mocks
 
         private readonly ITweetRepository _apiTweetRepository;
         private readonly ITweetRepository _dbTweetRepository;
-        private readonly IMemoryCache _memoryCache;
+        private readonly ICacheService _memoryCache;
         private readonly ISentimentalAnalysisService _sentimentalAnalysisService;
 
-        public UnitOfWorkMock(ITweetRepository apiTweetRepository, ITweetRepository dbTweetRepository, IMemoryCache memoryCache, ISentimentalAnalysisService sentimentalAnalysisService)
+        public UnitOfWorkMock(ITweetRepository apiTweetRepository, ITweetRepository dbTweetRepository, ICacheService memoryCache, ISentimentalAnalysisService sentimentalAnalysisService)
         {
             _apiTweetRepository = apiTweetRepository;
             _dbTweetRepository = dbTweetRepository;
@@ -26,6 +27,10 @@ namespace Core.Tests.Mocks
         public Mock<IUnitOfWork> Mock()
         {
             var mock = new Mock<IUnitOfWork>();
+            mock.Setup(x => x.ApiTweets).Returns(() => _apiTweetRepository);
+            mock.Setup(x => x.Tweets).Returns(() => _dbTweetRepository);
+            mock.Setup(x => x.Cache).Returns(() => _memoryCache);
+            mock.Setup(x => x.SentimentalAnalysis).Returns(() => _sentimentalAnalysisService);
             return mock;
         }
     }
