@@ -1,6 +1,6 @@
 ﻿namespace Core.Models
 {
-    public class TweetQuery
+    public sealed class TweetQuery
     {
         public string Key { get; }
         public int MaxQuantity { get; }
