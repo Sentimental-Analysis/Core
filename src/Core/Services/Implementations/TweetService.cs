@@ -21,11 +21,11 @@ namespace Core.Services.Implementations
 
         public Result<IEnumerable<Tweet>> GetTweetByKey(string key)
         {
-            string cacheKey = _unitOfWork.Cache.GenerateKey(nameof(TweetService), nameof(GetTweetByKeyAsync), key);
+            string cacheKey = _unitOfWork.Cache.GenerateKey(nameof(TweetService), nameof(GetTweetByKey), key);
 
             return _unitOfWork.Cache.GetOrStore(cacheKey, () =>
             {
-                var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000))?.ToList();
+                var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000)).ToList();
 
                 if (!dbResult.Any())
                 {
@@ -48,7 +48,7 @@ namespace Core.Services.Implementations
 
             return await _unitOfWork.Cache.GetOrStoreAsync(cacheKey, async () =>
             {
-                var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000))?.ToList();
+                var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000));
 
                 if (!dbResult.Any())
                 {
@@ -61,7 +61,7 @@ namespace Core.Services.Implementations
                     }
                     return Result<IEnumerable<Tweet>>.Error();
                 }
-                return Result<IEnumerable<Tweet>>.Wrap(dbResult.AsEnumerable());
+                return Result<IEnumerable<Tweet>>.Wrap(dbResult);
             }, TimeSpan.FromDays(1));
         }
 
