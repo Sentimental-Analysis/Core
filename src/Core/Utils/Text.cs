@@ -1,6 +1,6 @@
 ﻿namespace Core.Utils
 {
-    public class Text
+    public static class Text
     {
         public static bool IsNegate(string text)
         {

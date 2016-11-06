@@ -60,6 +60,7 @@ namespace Core.Cache.Implementations
             {
                 _shouldBeDisposed = false;
                 _memoryCache.Dispose();
+                GC.SuppressFinalize(this);
             }
         }
     }

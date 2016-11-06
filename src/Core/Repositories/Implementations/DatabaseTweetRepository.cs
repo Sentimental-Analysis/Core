@@ -14,9 +14,9 @@ namespace Core.Repositories.Implementations
         {
         }
 
-        public IEnumerable<Tweet> FindByKey(string query, int count)
+        public IEnumerable<Tweet> FindByKey(TweetQuery query)
         {
-            return DbManager.Tweets.Where(tweet => tweet.Key == query).Take(count).AsNoTracking().ToList();
+            return DbManager.Tweets.Where(tweet => tweet.Key == query.Key).Take(query.MaxQuantity).AsNoTracking().ToList();
         }
     }
 }

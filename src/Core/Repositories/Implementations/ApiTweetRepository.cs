@@ -16,7 +16,7 @@ namespace Core.Repositories.Implementations
     {
         private readonly ITwitterCredentials _credentials;
 
-        public ApiTweetRepository(TwitterCredentials credentials)
+        public ApiTweetRepository(Core.Models.TwitterApiCredentials credentials)
         {
             _credentials = Auth.SetUserCredentials(credentials.ConsumerKey, credentials.ConsumerSecret,
                 credentials.AccessToken, credentials.AccessTokenSecret);
@@ -62,14 +62,14 @@ namespace Core.Repositories.Implementations
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Tweet> FindByKey(string query, int count)
+        public IEnumerable<Tweet> FindByKey(TweetQuery query)
         {
-            var search = new SearchTweetsParameters(query)
+            var search = new SearchTweetsParameters(query.Key)
             {
                 SearchType = SearchResultType.Recent,
                 Lang = LanguageFilter.English,
                 Filters = TweetSearchFilters.None,
-                MaximumNumberOfResults = count
+                MaximumNumberOfResults = query.MaxQuantity
             };
             var result = Search.SearchTweets(search);
             return result.Select(itweet => new Tweet
@@ -77,7 +77,7 @@ namespace Core.Repositories.Implementations
                 Id = itweet.TweetDTO.IdStr,
                 Text = itweet.TweetDTO.Text,
                 Language = itweet.TweetDTO.Language.ToString(),
-                Key = query,
+                Key = query.Key,
                 Date = itweet.TweetDTO.CreatedAt,
                 Latitude = itweet.TweetDTO?.Coordinates?.Latitude ?? 0.0,
                 Longitude = itweet.TweetDTO?.Coordinates?.Longitude ?? 0.0,
