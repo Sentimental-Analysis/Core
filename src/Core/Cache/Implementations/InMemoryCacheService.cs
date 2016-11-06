@@ -38,17 +38,6 @@ namespace Core.Cache.Implementations
             return result;
         }
 
-        public string GenerateKey(string name, params string[] args)
-        {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.Append(name);
-            foreach (string arg in args)
-            {
-                stringBuilder.Append($"-{arg}");
-            }
-            return stringBuilder.ToString();
-        }
-
         public void Clear(string key)
         {
             _memoryCache.Remove(key);
