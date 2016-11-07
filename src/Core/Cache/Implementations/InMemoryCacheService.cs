@@ -9,7 +9,6 @@ namespace Core.Cache.Implementations
     public class InMemoryCacheService : ICacheService
     {
         private readonly IMemoryCache _memoryCache;
-        private bool _shouldBeDisposed = true;
 
         public InMemoryCacheService(IMemoryCache memoryCache)
         {
@@ -41,16 +40,6 @@ namespace Core.Cache.Implementations
         public void Clear(string key)
         {
             _memoryCache.Remove(key);
-        }
-
-        public void Dispose()
-        {
-            if (_shouldBeDisposed)
-            {
-                _shouldBeDisposed = false;
-                _memoryCache.Dispose();
-                GC.SuppressFinalize(this);
-            }
         }
     }
 }
