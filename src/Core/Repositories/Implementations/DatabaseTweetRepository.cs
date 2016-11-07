@@ -18,10 +18,5 @@ namespace Core.Repositories.Implementations
         {
             return DbContext.Tweets.Where(tweet => tweet.Key == query.Key).Take(query.MaxQuantity).AsNoTracking().ToList();
         }
-
-        public override void Dispose()
-        {
-
-        }
     }
 }

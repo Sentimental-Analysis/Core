@@ -13,17 +13,15 @@ namespace Core.UnitOfWork.Implementations
         private readonly IDbContext _dbContext;
         private bool _shouldBeDisposed = true;
 
-        public DefaultUnitOfWork(IDbContext context, TwitterApiCredentials credentials, ISentimentalAnalysisService sentimentalAnalysisService)
+        public DefaultUnitOfWork(IDbContext context, TwitterApiCredentials credentials)
         {
             _dbContext = context;
+            Tweets = new DatabaseTweetRepository(_dbContext);
             ApiTweets = new ApiTweetRepository(credentials);
-            Tweets = new DatabaseTweetRepository(context);
-            SentimentalAnalysis = sentimentalAnalysisService;
         }
 
         public ITweetRepository Tweets { get; }
-        public ITweetRepository ApiTweets { get; }
-        public ISentimentalAnalysisService SentimentalAnalysis { get; }
+        public ITweetApiRepository ApiTweets { get; }
 
         public int Complete()
         {

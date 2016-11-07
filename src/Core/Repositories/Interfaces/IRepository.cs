@@ -16,6 +16,5 @@ namespace Core.Repositories.Interfaces
         OperationStatus AddRange(IEnumerable<TEntity> entities);
         OperationStatus Remove(TEntity entity);
         OperationStatus RemoveRange(IEnumerable<TEntity> entities);
-        int Complete();
     }
 }

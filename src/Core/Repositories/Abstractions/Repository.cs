@@ -68,6 +68,9 @@ namespace Core.Repositories.Abstractions
             return DbContext.SaveChanges();
         }
 
-        public abstract void Dispose();
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
