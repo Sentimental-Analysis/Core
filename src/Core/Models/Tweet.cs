@@ -1,10 +1,13 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Models
 {
     public class Tweet : IEntity
     {
-        public string Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public long Id { get; set; }
+        public string TweetIdentifier { get; set; }
         public string Text { get; set; }
         public DateTime Date { get; set; }
         public string Language { get; set; }
