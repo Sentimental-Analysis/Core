@@ -10,13 +10,18 @@ namespace Core.Repositories.Implementations
 {
     public class DatabaseTweetRepository : Repository<Tweet>, ITweetRepository
     {
-        public DatabaseTweetRepository(IDbContext dbManager) : base(dbManager)
+        public DatabaseTweetRepository(IDbContext dbContext) : base(dbContext)
         {
         }
 
         public IEnumerable<Tweet> FindByKey(TweetQuery query)
         {
-            return DbManager.Tweets.Where(tweet => tweet.Key == query.Key).Take(query.MaxQuantity).AsNoTracking().ToList();
+            return DbContext.Tweets.Where(tweet => tweet.Key == query.Key).Take(query.MaxQuantity).AsNoTracking().ToList();
+        }
+
+        public override void Dispose()
+        {
+
         }
     }
 }

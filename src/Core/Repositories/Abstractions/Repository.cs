@@ -12,55 +12,62 @@ namespace Core.Repositories.Abstractions
 {
     public abstract class Repository<TEntity>: IRepository<TEntity> where TEntity : class, IEntity
     {
-        protected readonly IDbContext DbManager;
+        protected readonly IDbContext DbContext;
 
-        protected Repository(IDbContext dbManager)
+        protected Repository(IDbContext dbContext)
         {
-            DbManager = dbManager;
+            DbContext = dbContext;
         }
 
         public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
-            return DbManager.Set<TEntity>().Where(predicate).AsNoTracking().ToList();
+            return DbContext.Set<TEntity>().Where(predicate).AsNoTracking().ToList();
         }
 
         public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await DbManager.Set<TEntity>().Where(predicate).AsNoTracking().ToListAsync();
+            return await DbContext.Set<TEntity>().Where(predicate).AsNoTracking().ToListAsync();
         }
 
         public IEnumerable<TEntity> FindAll()
         {
-            return DbManager.Set<TEntity>().AsNoTracking().ToList();
+            return DbContext.Set<TEntity>().AsNoTracking().ToList();
         }
 
         public async Task<IEnumerable<TEntity>> FindAllAsync()
         {
-            return await DbManager.Set<TEntity>().AsNoTracking().ToListAsync();
+            return await DbContext.Set<TEntity>().AsNoTracking().ToListAsync();
         }
 
         public OperationStatus Add(TEntity entity)
         {
-            var result = DbManager.Set<TEntity>().Add(entity);
+            var result = DbContext.Set<TEntity>().Add(entity);
             return result.IsKeySet ? OperationStatus.Succeed : OperationStatus.Error;
         }
 
         public OperationStatus AddRange(IEnumerable<TEntity> entities)
         {
-            DbManager.Set<TEntity>().AddRange(entities);
+            DbContext.Set<TEntity>().AddRange(entities);
             return OperationStatus.Succeed;
         }
 
         public OperationStatus Remove(TEntity entity)
         {
-            var result = DbManager.Set<TEntity>().Remove(entity);
+            var result = DbContext.Set<TEntity>().Remove(entity);
             return result.IsKeySet ? OperationStatus.Succeed : OperationStatus.Error;
         }
 
         public OperationStatus RemoveRange(IEnumerable<TEntity> entities)
         {
-            DbManager.Set<TEntity>().RemoveRange(entities);
+            DbContext.Set<TEntity>().RemoveRange(entities);
             return  OperationStatus.Succeed;
         }
+
+        public int Complete()
+        {
+            return DbContext.SaveChanges();
+        }
+
+        public abstract void Dispose();
     }
 }
