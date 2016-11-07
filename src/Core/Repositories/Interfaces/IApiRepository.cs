@@ -1,6 +1,4 @@
-﻿using Core.Models;
-
-namespace Core.Services.Interfaces
+﻿namespace Core.Repositories.Interfaces
 {
     public interface IApiRepository<in TParameter, out TGet>
     {
