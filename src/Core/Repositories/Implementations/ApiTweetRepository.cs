@@ -31,7 +31,7 @@ namespace Core.Repositories.Implementations
             var result = Search.SearchTweets(search);
             return result.Select(itweet => new Tweet
             {
-                Id = itweet.TweetDTO.IdStr,
+                TweetIdentifier = itweet.TweetDTO.IdStr,
                 Text = itweet.TweetDTO.Text,
                 Language = itweet.TweetDTO.Language.ToString(),
                 Key = parameter.Key,
