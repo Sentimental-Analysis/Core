@@ -6,7 +6,7 @@ using Core.Models;
 
 namespace Core.Repositories.Interfaces
 {
-    public interface IRepository<TEntity> where TEntity : class, IEntity
+    public interface IRepository<TEntity> : IDisposable where TEntity : class, IEntity
     {
         IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
