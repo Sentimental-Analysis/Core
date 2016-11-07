@@ -30,6 +30,11 @@ namespace Core.UnitOfWork.Implementations
         public ICacheService Cache { get; }
         public ISentimentalAnalysisService SentimentalAnalysis { get; }
 
+        public int Complete()
+        {
+            return _dbContext.SaveChanges();
+        }
+
         public void Dispose()
         {
             if (_shouldBeDisposed)

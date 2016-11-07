@@ -35,6 +35,7 @@ namespace Core.Services.Implementations
                 if (!analyzedTweets.IsSuccess) return Result<IEnumerable<Tweet>>.Error();
 
                 _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
+                _unitOfWork.Complete();
                 return analyzedTweets;
             }, TimeSpan.FromDays(1));
         }

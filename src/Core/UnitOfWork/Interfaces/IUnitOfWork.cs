@@ -11,5 +11,6 @@ namespace Core.UnitOfWork.Interfaces
         ITweetRepository ApiTweets { get; }
         ICacheService Cache { get; }
         ISentimentalAnalysisService SentimentalAnalysis { get; }
+        int Complete();
     }
 }
