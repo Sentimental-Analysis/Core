@@ -31,6 +31,7 @@ namespace Core.Tests.Mocks
             mock.Setup(x => x.Tweets).Returns(() => _dbTweetRepository);
             mock.Setup(x => x.Cache).Returns(() => _memoryCache);
             mock.Setup(x => x.SentimentalAnalysis).Returns(() => _sentimentalAnalysisService);
+            mock.Setup(x => x.Complete()).Returns(() => 1);
             return mock;
         }
     }
