@@ -22,7 +22,6 @@ namespace Core.Tests.Mocks
             var mock = new Mock<IUnitOfWork>();
             mock.Setup(x => x.ApiTweets).Returns(() => _apiTweetRepository);
             mock.Setup(x => x.Tweets).Returns(() => _dbTweetRepository);
-            mock.Setup(x => x.Complete()).Returns(() => 1);
             return mock;
         }
     }

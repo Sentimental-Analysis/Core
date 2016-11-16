@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Core.Models;
 using Core.Repositories.Interfaces;
@@ -31,6 +32,7 @@ namespace Core.Repositories.Implementations
             var result = Search.SearchTweets(search);
             return result.Select(itweet => new Tweet
             {
+                Id = Guid.NewGuid(),
                 TweetIdentifier = itweet.TweetDTO.IdStr,
                 Text = itweet.TweetDTO.Text,
                 Language = itweet.TweetDTO.Language.ToString(),
