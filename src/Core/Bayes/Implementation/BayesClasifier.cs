@@ -9,6 +9,7 @@ namespace Core.Bayes.Implementation
         public Analysis Classify(Tweet tweet)
         {
             var result = new Analysis();
+            return null;
         }
     }
 }
