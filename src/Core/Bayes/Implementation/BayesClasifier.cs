@@ -8,7 +8,7 @@ namespace Core.Bayes.Implementation
     {
         public Analysis Classify(Tweet tweet)
         {
-            throw new System.NotImplementedException();
+            var result = new Analysis();
         }
     }
 }
