@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Core.Bayes.Data;
+using Core.Models;
 
 namespace Core.Bayes.Interfaces
 {
     public interface IBayesClassifier
     {
-        void Classify(HashSet<string> words);
+        Analysis Classify(Tweet tweet);
     }
 }
