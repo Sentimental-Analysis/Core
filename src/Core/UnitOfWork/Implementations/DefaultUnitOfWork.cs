@@ -1,11 +1,11 @@
-﻿﻿using System;
- using Cassandra;
- using Core.Database.Implementations;
- using Core.Database.Interfaces;
+﻿using System;
+using Cassandra;
+using Core.Database.Implementations;
+using Core.Database.Interfaces;
 using Core.Models;
 using Core.Repositories.Implementations;
 using Core.Repositories.Interfaces;
- using Core.UnitOfWork.Interfaces;
+using Core.UnitOfWork.Interfaces;
 
 namespace Core.UnitOfWork.Implementations
 {
