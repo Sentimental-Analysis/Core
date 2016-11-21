@@ -2,6 +2,6 @@
 {
     public interface IPredicator
     {
-        
+        short Predict(string word);
     }
 }
