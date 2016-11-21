@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Core.Bayes.Data;
 using Core.Bayes.Interfaces;
 
 namespace Core.Bayes.Implementation
@@ -6,15 +7,14 @@ namespace Core.Bayes.Implementation
     public class BayesPredicator : IPredicator
     {
         private readonly Dictionary<string, int> _words;
-
         public BayesPredicator(Dictionary<string, int> words)
         {
             _words = words;
         }
 
-        public short Predict(string word)
+        public Score Predict(string word)
         {
-            return 0;
+            return new Score();
         }
     }
 }

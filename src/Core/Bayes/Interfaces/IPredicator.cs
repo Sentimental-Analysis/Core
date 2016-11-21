@@ -1,7 +1,9 @@
-﻿namespace Core.Bayes.Interfaces
+﻿using Core.Bayes.Data;
+
+namespace Core.Bayes.Interfaces
 {
     public interface IPredicator
     {
-        short Predict(string word);
+        Score Predict(string word);
     }
 }
