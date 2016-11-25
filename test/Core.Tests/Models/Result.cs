@@ -73,5 +73,14 @@ namespace Core.Tests.Models
             testResult.IsSuccess.Should().BeFalse();
             testResult.Value.Should().Be(default(string));
         }
+
+        [Fact]
+        public void Test_Success_Wrap()
+        {
+            var testResult = Result<string>.Success(null, "Success");
+            testResult.Should().NotBeNull();
+            testResult.IsSuccess.Should().BeTrue();
+            testResult.Value.Should().Be(default(string));
+        }
     }
 }
