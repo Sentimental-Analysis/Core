@@ -1,47 +1,35 @@
 ﻿using System;
-using Core.Cache.Implementations;
-using Core.Cache.Interfaces;
+using Cassandra;
+using Core.Database.Implementations;
 using Core.Database.Interfaces;
 using Core.Models;
 using Core.Repositories.Implementations;
 using Core.Repositories.Interfaces;
-using Core.Services.Interfaces;
 using Core.UnitOfWork.Interfaces;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Core.UnitOfWork.Implementations
 {
     public class DefaultUnitOfWork : IUnitOfWork
     {
-        private readonly IDbContext _dbContext;
+        private readonly ICassandraConnection _connection;
         private bool _shouldBeDisposed = true;
 
-        public DefaultUnitOfWork(IDbContext context, IMemoryCache cache, TwitterApiCredentials credentials, ISentimentalAnalysisService sentimentalAnalysisService)
+        public DefaultUnitOfWork(Cluster cluster, TwitterApiCredentials credentials)
         {
-            _dbContext = context;
+            _connection = DefaultCassandraConnection.Connect(cluster);
+            Tweets = new DatabaseTweetRepository(_connection);
             ApiTweets = new ApiTweetRepository(credentials);
-            Tweets = new DatabaseTweetRepository(context);
-            Cache = new InMemoryCacheService(cache);
-            SentimentalAnalysis = sentimentalAnalysisService;
         }
 
         public ITweetRepository Tweets { get; }
-        public ITweetRepository ApiTweets { get; }
-        public ICacheService Cache { get; }
-        public ISentimentalAnalysisService SentimentalAnalysis { get; }
-
-        public int Complete()
-        {
-            return _dbContext.SaveChanges();
-        }
+        public ITweetApiRepository ApiTweets { get; }
 
         public void Dispose()
         {
             if (_shouldBeDisposed)
             {
                 _shouldBeDisposed = false;
-                _dbContext?.Dispose();
-                Cache?.Dispose();
+                _connection?.Dispose();
                 GC.SuppressFinalize(this);
             }
         }

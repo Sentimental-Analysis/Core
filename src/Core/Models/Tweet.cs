@@ -4,7 +4,8 @@ namespace Core.Models
 {
     public class Tweet : IEntity
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
+        public string TweetIdentifier { get; set; }
         public string Text { get; set; }
         public DateTime Date { get; set; }
         public string Language { get; set; }
