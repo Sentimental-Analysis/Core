@@ -1,11 +1,12 @@
-﻿using Core.Models;
+﻿using Bayes.Data;
+using Core.Models;
 
 namespace Core.Tests.Builders
 {
     public class TweetBuilder : IBuilder<Tweet>
     {
         private string _text = string.Empty;
-        private int _sentiment = 0;
+        private WordCategory _sentiment = 0;
 
         public static TweetBuilder Tweet() => new TweetBuilder();
 
@@ -15,7 +16,7 @@ namespace Core.Tests.Builders
             return this;
         }
 
-        public TweetBuilder WithSentiment(int sentiment)
+        public TweetBuilder WithSentiment(WordCategory sentiment)
         {
             _sentiment = sentiment;
             return this;
