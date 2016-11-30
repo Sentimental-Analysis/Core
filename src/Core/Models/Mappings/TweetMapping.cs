@@ -11,7 +11,7 @@
                 .Column(x => x.Language)
                 .Column(x => x.Latitude)
                 .Column(x => x.Longitude)
-                .Column(x => x.Sentiment)
+                .Column(x => x.Sentiment, cm => cm.WithDbType<int>())
                 .Column(x => x.Text)
                 .Column(x => x.TweetIdentifier);
         }
