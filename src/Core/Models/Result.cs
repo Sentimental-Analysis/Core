@@ -39,5 +39,10 @@ namespace Core.Models
         {
             return new Result<T>(default(T), false, messages);
         }
+
+        public static Result<T> Success(T value, params string[] messages)
+        {
+            return new Result<T>(value, true, messages);
+        }
     }
 }
