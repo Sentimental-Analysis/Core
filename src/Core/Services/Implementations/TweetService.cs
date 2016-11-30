@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Models;
-using Core.Repositories.Interfaces;
 using Core.Services.Interfaces;
 using Core.UnitOfWork.Interfaces;
 
@@ -34,7 +33,6 @@ namespace Core.Services.Implementations
             if (!analyzedTweets.IsSuccess) return Result<IEnumerable<Tweet>>.Error();
 
             _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
-            _unitOfWork.Complete();
             return analyzedTweets;
         }
 

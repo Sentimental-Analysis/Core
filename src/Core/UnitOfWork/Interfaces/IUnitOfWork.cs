@@ -1,6 +1,5 @@
 ﻿using System;
 using Core.Repositories.Interfaces;
-using Core.Services.Interfaces;
 
 namespace Core.UnitOfWork.Interfaces
 {
@@ -8,6 +7,5 @@ namespace Core.UnitOfWork.Interfaces
     {
         ITweetRepository Tweets { get; }
         ITweetApiRepository ApiTweets { get; }
-        int Complete();
     }
 }
