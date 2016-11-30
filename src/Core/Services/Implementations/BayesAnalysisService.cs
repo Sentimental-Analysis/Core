@@ -13,9 +13,9 @@ namespace Core.Services.Implementations
 {
     public class BayesAnalysisService : ISentimentalAnalysisService
     {
-        private readonly IClassifier<LearnerState, string> _tweetClassifier;
+        private readonly IClassifier<Sentence, string> _tweetClassifier;
 
-        public BayesAnalysisService(IClassifier<LearnerState, Sentence> tweetClassifier)
+        public BayesAnalysisService(IClassifier<Sentence, string> tweetClassifier)
         {
             _tweetClassifier = tweetClassifier;
         }
@@ -30,9 +30,9 @@ namespace Core.Services.Implementations
             var result = tweets.AsParallel().WithDegreeOfParallelism(Environment.ProcessorCount).Select(x =>
             {
                 var res = _tweetClassifier.Classify(x.Text);
-
-            }).ToList();
-            throw new System.NotImplementedException();
+                return x.WithNewSentiment(res.Category);
+            }).AsEnumerable();
+            return Result<IEnumerable<Tweet>>.Wrap(result);
         }
     }
 }
