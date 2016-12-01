@@ -11,6 +11,8 @@ namespace Core.Tests.Builders
     {
         private LearnerState _learnerState;
 
+        public static ClassifierBuilder Classifier() => new ClassifierBuilder();
+
         public ClassifierBuilder()
         {
             _learnerState = LearnerState.Empty;
