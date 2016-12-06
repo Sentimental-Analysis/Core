@@ -37,6 +37,12 @@ namespace Core.Cache.Implementations
             return result;
         }
 
+        public bool Exist(string key)
+        {
+            object result;
+            return _memoryCache.TryGetValue(key, out key);
+        }
+
         public void Clear(string key)
         {
             _memoryCache.Remove(key);
