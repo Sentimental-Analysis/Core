@@ -1,18 +1,20 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using Core.Models;
 using Core.ProducerConsumer.Interfaces;
 
 namespace Core.ProducerConsumer.Implementation
 {
-    public class TweetProducerConsumer : IProducerConsumer<Tweet>
+    public class TweetProducerConsumer : IProducerConsumer<Tweet, IEnumerable<Tweet>>
     {
         public Task ProduceAsync(ITargetBlock<Tweet> target)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public Task<TConsume> ConsumeAsync<TConsume>(ISourceBlock<Tweet> source)
+        public Task<IEnumerable<Tweet>> ConsumeAsync(ISourceBlock<Tweet> source)
         {
             throw new System.NotImplementedException();
         }

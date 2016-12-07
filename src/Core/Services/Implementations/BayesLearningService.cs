@@ -15,7 +15,8 @@ namespace Core.Services.Implementations
         private readonly IEnumerable<Sentence> _sentences;
         private readonly ITweetLearner _learner;
 
-        public BayesLearningService(ICacheService cacheService, ITweetLearner learner, IEnumerable<Sentence> initSentences)
+        public BayesLearningService(ICacheService cacheService, ITweetLearner learner,
+            IEnumerable<Sentence> initSentences)
         {
             _cacheService = cacheService;
             _sentences = initSentences;
@@ -32,20 +33,23 @@ namespace Core.Services.Implementations
 
         public LearnerState Get()
         {
-            return _cacheService.GetOrStore(_learnStateCacheKey, () =>
+            var serializableState =  _cacheService.GetOrStore(_learnStateCacheKey, () =>
             {
-                return _sentences.Aggregate(LearnerState.Empty, (state, sentence) => _learner.Learn(state, sentence));
+                return SerializableLearnerState.FromImmutableLearnerState(_sentences.Aggregate(LearnerState.Empty, (state, sentence) => _learner.Learn(state, sentence)));
             }, TimeSpan.FromDays(1));
+
+            return SerializableLearnerState.ToImmutableLearnerState(serializableState);
         }
 
         public LearnerState Learn(IEnumerable<Sentence> sentences)
         {
             var oldState = Get();
             _cacheService.Clear(_learnStateCacheKey);
-            return _cacheService.GetOrStore(_learnStateCacheKey, () =>
+            var mutableState =  _cacheService.GetOrStore(_learnStateCacheKey, () =>
             {
-                return sentences.Aggregate(oldState, (state, sentence) => _learner.Learn(state, sentence));
+                return SerializableLearnerState.FromImmutableLearnerState(sentences.Aggregate(oldState, (state, sentence) => _learner.Learn(state, sentence)));
             }, TimeSpan.FromDays(1));
+            return SerializableLearnerState.ToImmutableLearnerState(mutableState);
         }
     }
 }

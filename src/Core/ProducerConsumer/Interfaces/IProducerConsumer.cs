@@ -3,9 +3,9 @@ using System.Threading.Tasks.Dataflow;
 
 namespace Core.ProducerConsumer.Interfaces
 {
-    public interface IProducerConsumer<T>
+    public interface IProducerConsumer<TProduce, TConsume>
     {
-        Task ProduceAsync(ITargetBlock<T> target);
-        Task<TConsume> ConsumeAsync<TConsume>(ISourceBlock<T> source);
+        Task ProduceAsync(ITargetBlock<TProduce> target);
+        Task<TConsume> ConsumeAsync(ISourceBlock<TProduce> source);
     }
 }
