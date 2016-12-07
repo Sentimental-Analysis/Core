@@ -21,6 +21,12 @@ namespace Core.Tests.Stubs
             {
                 return data;
             }
+            else
+            {
+                data = func();
+                _data.Add(key, data);
+            }
+            return data;
         }
 
         public Task<T> GetOrStoreAsync<T>(string key, Func<Task<T>> func, TimeSpan timeForCache)

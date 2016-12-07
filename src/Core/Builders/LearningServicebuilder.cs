@@ -35,7 +35,7 @@ namespace Core.Builders
 
         public ILearningService Build()
         {
-            return new LearningService(_cacheService, _tweetLearner, _sentences);
+            return new BayesLearningService(_cacheService, _tweetLearner, _sentences);
         }
     }
 }
