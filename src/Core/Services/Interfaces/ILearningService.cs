@@ -1,11 +1,11 @@
-﻿using Bayes.Data;
+﻿using System.Collections.Generic;
+using Bayes.Data;
 
 namespace Core.Services.Interfaces
 {
     public interface ILearningService
     {
-        LearnerState GetOrStore(LearnerState state);
-        LearnerState Store(LearnerState state);
-        LearnerState Update(LearnerState state);
+        LearnerState Get();
+        LearnerState Learn(IEnumerable<Sentence> sentences);
     }
 }

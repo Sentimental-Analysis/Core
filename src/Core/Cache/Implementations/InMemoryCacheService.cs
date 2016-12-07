@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Threading.Tasks;
 using Core.Cache.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
