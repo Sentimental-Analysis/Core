@@ -2,8 +2,10 @@
 using Bayes.Classifiers.Implementations;
 using Bayes.Classifiers.Interfaces;
 using Bayes.Data;
+using System.Linq;
 using Bayes.Learner.Implementations;
 using Bayes.Utils;
+using LanguageExt.UnitsOfMeasure;
 
 namespace Core.Tests.Builders
 {
@@ -20,7 +22,9 @@ namespace Core.Tests.Builders
 
         public ClassifierBuilder WithLearnData(ImmutableDictionary<string, int> words)
         {
-            _learnerState = Learning.FromDictionary(words);
+            var learner = new TweetLearner();
+            var list = words.ToList();
+            _learnerState = list.Select(x => new Sentence(x.Key, x.Value >= 0 ? WordCategory.Positive : WordCategory.Negative)).Aggregate(_learnerState, (state, sentence) => learner.Learn(state, sentence));
             return this;
         }
 
