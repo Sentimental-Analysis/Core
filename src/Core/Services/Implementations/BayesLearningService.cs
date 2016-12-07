@@ -8,21 +8,21 @@ using System.Linq;
 
 namespace Core.Services.Implementations
 {
-    public class LearningService : ILearningService
+    public class BayesLearningService : ILearningService
     {
         private readonly ICacheService _cacheService;
-        private readonly string _learnStateCacheKey = $"{nameof(LearningService)}-learnstate";
+        private readonly string _learnStateCacheKey = $"{nameof(BayesLearningService)}-learnstate";
         private readonly IEnumerable<Sentence> _sentences;
         private readonly ITweetLearner _learner;
 
-        public LearningService(ICacheService cacheService, ITweetLearner learner, IEnumerable<Sentence> initSentences)
+        public BayesLearningService(ICacheService cacheService, ITweetLearner learner, IEnumerable<Sentence> initSentences)
         {
             _cacheService = cacheService;
             _sentences = initSentences;
             _learner = learner;
         }
 
-        public LearningService(ICacheService cacheService, ITweetLearner learner, params Sentence[] initSentences)
+        public BayesLearningService(ICacheService cacheService, ITweetLearner learner, params Sentence[] initSentences)
         {
             _cacheService = cacheService;
             _sentences = initSentences;

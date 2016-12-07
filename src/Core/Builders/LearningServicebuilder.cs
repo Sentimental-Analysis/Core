@@ -13,6 +13,8 @@ namespace Core.Builders
         private ITweetLearner _tweetLearner;
         private ICacheService _cacheService;
 
+        public static LearningServiceBuilder LearningService => new LearningServiceBuilder();
+
         public LearningServiceBuilder WithSentences(params Sentence[] sentences)
         {
             _sentences = sentences;
