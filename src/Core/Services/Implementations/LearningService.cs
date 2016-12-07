@@ -22,6 +22,13 @@ namespace Core.Services.Implementations
             _learner = learner;
         }
 
+        public LearningService(ICacheService cacheService, ITweetLearner learner, params Sentence[] initSentences)
+        {
+            _cacheService = cacheService;
+            _sentences = initSentences;
+            _learner = learner;
+        }
+
 
         public LearnerState Get()
         {
