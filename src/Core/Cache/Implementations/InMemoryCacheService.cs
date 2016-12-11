@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Threading.Tasks;
 using Core.Cache.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
@@ -35,6 +34,12 @@ namespace Core.Cache.Implementations
                 _memoryCache.Set(key, await func(), timeForCache);
             }
             return result;
+        }
+
+        public bool Exist(string key)
+        {
+            object result;
+            return _memoryCache.TryGetValue(key, out key);
         }
 
         public void Clear(string key)
