@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using Bayes.Classifiers.Interfaces;
 using Bayes.Data;
 using Core.Models;
@@ -25,6 +26,9 @@ namespace Core.Services.Implementations
 
         public Result<IEnumerable<Tweet>> Analyze(IEnumerable<Tweet> tweets)
         {
+            var tweetsBlock = new BufferBlock<Tweet>(new DataflowBlockOptions(){BoundedCapacity = Environment.ProcessorCount * 4});
+
+
             var result = tweets.AsParallel().WithDegreeOfParallelism(Environment.ProcessorCount).Select(x =>
             {
                 var res = _tweetClassifier.Classify(x.Text);

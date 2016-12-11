@@ -51,5 +51,13 @@ namespace Core.Services.Implementations
             }, TimeSpan.FromDays(1));
             return SerializableLearnerState.ToImmutableLearnerState(mutableState);
         }
+
+        public LearnerState LearnOne(Sentence sentence)
+        {
+            var oldState = Get();
+            _cacheService.Clear(_learnStateCacheKey);
+            var mutableState = _cacheService.GetOrStore(_learnStateCacheKey, () => SerializableLearnerState.FromImmutableLearnerState(_learner.Learn(oldState, sentence)), TimeSpan.FromDays(1));
+            return SerializableLearnerState.ToImmutableLearnerState(mutableState);
+        }
     }
 }
