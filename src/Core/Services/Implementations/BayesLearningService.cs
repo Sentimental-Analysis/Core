@@ -12,30 +12,22 @@ namespace Core.Services.Implementations
     {
         private readonly ICacheService _cacheService;
         private readonly string _learnStateCacheKey = $"{nameof(BayesLearningService)}-learnstate";
-        private readonly IEnumerable<Sentence> _sentences;
+        private readonly Lazy<IEnumerable<Sentence>> _sentences;
         private readonly ITweetLearner _learner;
 
         public BayesLearningService(ICacheService cacheService, ITweetLearner learner,
-            IEnumerable<Sentence> initSentences)
+            Lazy<IEnumerable<Sentence>> initSentences)
         {
             _cacheService = cacheService;
             _sentences = initSentences;
             _learner = learner;
         }
-
-        public BayesLearningService(ICacheService cacheService, ITweetLearner learner, params Sentence[] initSentences)
-        {
-            _cacheService = cacheService;
-            _sentences = initSentences;
-            _learner = learner;
-        }
-
 
         public LearnerState Get()
         {
             var serializableState =  _cacheService.GetOrStore(_learnStateCacheKey, () =>
             {
-                return SerializableLearnerState.FromImmutableLearnerState(_sentences.Aggregate(LearnerState.Empty, (state, sentence) => _learner.Learn(state, sentence)));
+                return SerializableLearnerState.FromImmutableLearnerState(_sentences.Value.Aggregate(LearnerState.Empty, (state, sentence) => _learner.Learn(state, sentence)));
             }, TimeSpan.FromDays(1));
 
             return SerializableLearnerState.ToImmutableLearnerState(serializableState);
