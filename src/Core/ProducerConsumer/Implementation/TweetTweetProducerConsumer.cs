@@ -8,6 +8,7 @@ using Core.ProducerConsumer.Interfaces;
 using Core.Services.Interfaces;
 using System.Linq;
 using Bayes.Data;
+using Core.Repositories.Interfaces;
 
 namespace Core.ProducerConsumer.Implementation
 {
@@ -15,37 +16,21 @@ namespace Core.ProducerConsumer.Implementation
     {
         private readonly ILearningService _learningService;
 
-        public TweetTweetProducerConsumer(ILearningService learningService)
+        public TweetTweetProducerConsumer(ITweetApiRepository _apiRepository, ILearningService learningService)
         {
             _learningService = learningService;
         }
 
-        public async Task ProduceAsync(ITargetBlock<Tweet> target, IEnumerable<Tweet> values)
+        public async Task ProduceAsync(ITargetBlock<Tweet> target, string key)
         {
-            var personList = values.ToList();
-            var size = (int) Math.Ceiling(personList.Count / (double) Environment.ProcessorCount);
-            var producers =
-                Enumerable.Range(0, Environment.ProcessorCount)
-                    .Select(x => ProduceAsyncPart(target, personList.Skip(x * size).Take(size)))
-                    .ToArray();
-            await Task.WhenAll(producers);
-            target.Complete();
-        }
-
-        private async Task ProduceAsyncPart(ITargetBlock<Tweet> target, IEnumerable<Tweet> values)
-        {
-            foreach (var tweet in values)
-            {
-                var classifier = new TweetClassifier(_learningService.Get());
-                var score = classifier.Classify(tweet.Text);
-                await target.SendAsync(tweet.WithNewSentiment(score.Sentence.Category));
-            }
+            var apiResult = _learningService.,
         }
 
         public Tweet Consume(Tweet source)
         {
-            _learningService.LearnOne(new Sentence(source.Text, source.Sentiment));
-            return source;
+            var classifier = new TweetClassifier(_learningService.Get());
+            var score = classifier.Classify(source.Text);
+            return source.WithNewSentiment(score.Sentence.Category);
         }
     }
 }
