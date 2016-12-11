@@ -8,6 +8,6 @@ namespace Core.ProducerConsumer.Interfaces
     public interface ITweetProducerConsumer
     {
         Task ProduceAsync(ITargetBlock<Tweet> target, IEnumerable<Tweet> values);
-        Tweet ConsumeAsync(Tweet source);
+        Tweet Consume(Tweet source);
     }
 }

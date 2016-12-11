@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using Bayes.Classifiers.Implementations;
-using Bayes.Learner.Implementations;
 using Core.Models;
 using Core.ProducerConsumer.Interfaces;
 using Core.Services.Interfaces;
@@ -43,7 +42,7 @@ namespace Core.ProducerConsumer.Implementation
             }
         }
 
-        public Tweet ConsumeAsync(Tweet source)
+        public Tweet Consume(Tweet source)
         {
             _learningService.LearnOne(new Sentence(source.Text, source.Sentiment));
             return source;
