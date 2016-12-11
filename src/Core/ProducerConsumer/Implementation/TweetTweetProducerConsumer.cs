@@ -8,14 +8,15 @@ using Core.Models;
 using Core.ProducerConsumer.Interfaces;
 using Core.Services.Interfaces;
 using System.Linq;
+using Bayes.Data;
 
 namespace Core.ProducerConsumer.Implementation
 {
-    public class TweetProducerConsumer : IProducerConsumer<Tweet, Tweet>
+    public class TweetTweetProducerConsumer : ITweetProducerConsumer
     {
         private readonly ILearningService _learningService;
 
-        public TweetProducerConsumer(ILearningService learningService)
+        public TweetTweetProducerConsumer(ILearningService learningService)
         {
             _learningService = learningService;
         }
@@ -44,7 +45,8 @@ namespace Core.ProducerConsumer.Implementation
 
         public Tweet ConsumeAsync(Tweet source)
         {
-            _learningService.Learn(source);
+            _learningService.LearnOne(new Sentence(source.Text, source.Sentiment));
+            return source;
         }
     }
 }
