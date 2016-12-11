@@ -12,29 +12,51 @@ namespace Core.Services.Implementations
 {
     public class BayesAnalysisService : ISentimentalAnalysisService
     {
-        private readonly IClassifier<Score, string> _tweetClassifier;
+        private readonly ILearningService _learningService;
+        private readonly ITweetClassifier _tweetClassifier;
 
-        public BayesAnalysisService(IClassifier<Score, string> tweetClassifier)
+        public BayesAnalysisService(ILearningService learningService, ITweetClassifier classifier)
         {
-            _tweetClassifier = tweetClassifier;
+            _learningService = learningService;
+            _tweetClassifier = classifier;
         }
 
-        public Task<Result<IEnumerable<Tweet>>> AnalyzeAsync(IEnumerable<Tweet> tweets)
+        public async Task<Result<IEnumerable<Tweet>>> AnalyzeAsync(IEnumerable<Tweet> tweets)
         {
-            throw new NotImplementedException();
+            var  buffer = new BufferBlock<Tweet>(new DataflowBlockOptions() {BoundedCapacity = Environment.ProcessorCount * 5});
+            var result = new List<Tweet>();
+            var classifier = new ActionBlock<Tweet>(x =>
+            {
+                var res = _tweetClassifier.Classify(x.Text);
+                result.Add(x.WithNewSentiment(res.Sentence.Category));
+            }, new ExecutionDataflowBlockOptions() {BoundedCapacity = 1}) ;
+
+            var classifiers = Enumerable.Range(0, Environment.ProcessorCount).Select(x => classifier).ToList();
+
+            var linkToOptions = new DataflowLinkOptions() {PropagateCompletion = true};
+            classifiers.ForEach(x => buffer.LinkTo(x, linkToOptions));
+
+            foreach (var tweet in tweets)
+            {
+                await buffer.SendAsync(tweet);
+            }
+
+            buffer.Complete();
+            await Task.WhenAll(buffer.Completion);
+            await Task.WhenAll(classifiers.Select(x => x.Completion).ToArray());
+            _learningService.Learn(result.Select(x => new Sentence(x.Text, x.Sentiment)));
+            return Result<IEnumerable<Tweet>>.Wrap(result.AsEnumerable());
         }
 
         public Result<IEnumerable<Tweet>> Analyze(IEnumerable<Tweet> tweets)
         {
-            var tweetsBlock = new BufferBlock<Tweet>(new DataflowBlockOptions(){BoundedCapacity = Environment.ProcessorCount * 4});
-
-
             var result = tweets.AsParallel().WithDegreeOfParallelism(Environment.ProcessorCount).Select(x =>
             {
                 var res = _tweetClassifier.Classify(x.Text);
                 return x.WithNewSentiment(res.Sentence.Category);
-            }).AsEnumerable();
-            return Result<IEnumerable<Tweet>>.Wrap(result);
+            }).ToList();
+            _learningService.Learn(result.Select(x => new Sentence(x.Text, x.Sentiment)));
+            return Result<IEnumerable<Tweet>>.Wrap(result.AsEnumerable());
         }
     }
 }
