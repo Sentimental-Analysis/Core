@@ -63,15 +63,17 @@ namespace Core.Services.Implementations
             var keywords = tweetsList.SelectMany(x => x.Text.Tokenize()).DistinctBy(x => x);
             var negativeQuantity = tweetsList.Count(tweet => tweet.Sentiment == WordCategory.Negative);
             var positiveQuantity = tweetsList.Count(tweet => tweet.Sentiment == WordCategory.Positive);
-
-//            var score = new AnalysisScore
-//            {
-//                KeyWords = tweetsList.SelectMany(x => x.Text.Tokenize()),
-//                NegativeTweetsQuantity = tweetsList.Count(tweet => tweet.Sentiment == WordCategory.Negative),
-//                PositiveTweetsQuantity = tweetsList.Count(tweet => tweet.Sentiment == WordCategory.Positive),
-//                Sentiment = tweetsList.Count(tweet => tweet.Sentiment == WordCategory.Negative) > tweetsList.Count(tweet => tweet.Sentiment == WordCategory.Positive) ? WordCategory.Negative : WordCategory.Positive
-//            };
-            return new AnalysisScore();
+            var sentimentResult = negativeQuantity > positiveQuantity
+                ? GeneralSentiment.Negative
+                : negativeQuantity == positiveQuantity ? GeneralSentiment.Neutral : GeneralSentiment.Positive;
+            var score = new AnalysisScore
+            {
+                KeyWords = keywords,
+                NegativeTweetsQuantity = negativeQuantity,
+                PositiveTweetsQuantity = positiveQuantity,
+                Sentiment = sentimentResult
+            };
+            return score;
         }
 
         public void Dispose()
