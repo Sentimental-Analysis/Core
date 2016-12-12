@@ -28,7 +28,7 @@ namespace Core.Services.Implementations
         {
             var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000)).ToList();
 
-            if (dbResult.Any()) return Result<AnalysisScore>.Wrap(CountScore(dbResult));
+            if (dbResult.Any()) return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(dbResult));
 
             var apiResult = _unitOfWork.ApiTweets.Get(new TweetQuery(key));
             var analyzedTweets = _sentimentalAnalysisService.Analyze(apiResult);
@@ -36,7 +36,7 @@ namespace Core.Services.Implementations
             if (!analyzedTweets.IsSuccess) return Result<AnalysisScore>.Error();
 
             _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
-            return Result<AnalysisScore>.Wrap(CountScore(analyzedTweets.Value));
+            return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(analyzedTweets.Value));
         }
 
         public async Task<Result<AnalysisScore>> GetTweetScoreByKeyAsync(string key)
@@ -50,30 +50,11 @@ namespace Core.Services.Implementations
                 if (analyzedTweets.IsSuccess)
                 {
                     _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
-                    return Result<AnalysisScore>.Wrap(CountScore(analyzedTweets.Value));
+                    return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(analyzedTweets.Value));
                 }
                 return Result<AnalysisScore>.Error();
             }
-            return Result<IEnumerable<Tweet>>.Wrap(CountScore(dbResult));
-        }
-
-        private AnalysisScore CountScore(IEnumerable<Tweet> tweets)
-        {
-            var tweetsList = tweets.ToList();
-            var keywords = tweetsList.SelectMany(x => x.Text.Tokenize()).DistinctBy(x => x);
-            var negativeQuantity = tweetsList.Count(tweet => tweet.Sentiment == WordCategory.Negative);
-            var positiveQuantity = tweetsList.Count(tweet => tweet.Sentiment == WordCategory.Positive);
-            var sentimentResult = negativeQuantity > positiveQuantity
-                ? GeneralSentiment.Negative
-                : negativeQuantity == positiveQuantity ? GeneralSentiment.Neutral : GeneralSentiment.Positive;
-            var score = new AnalysisScore
-            {
-                KeyWords = keywords,
-                NegativeTweetsQuantity = negativeQuantity,
-                PositiveTweetsQuantity = positiveQuantity,
-                Sentiment = sentimentResult
-            };
-            return score;
+            return Result<IEnumerable<Tweet>>.Wrap(AnalysisScore.FromTweets(dbResult));
         }
 
         public void Dispose()
