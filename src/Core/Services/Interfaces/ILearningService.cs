@@ -7,5 +7,6 @@ namespace Core.Services.Interfaces
     {
         LearnerState Get();
         LearnerState Learn(IEnumerable<Sentence> sentences);
+        LearnerState LearnOne(Sentence sentences);
     }
 }

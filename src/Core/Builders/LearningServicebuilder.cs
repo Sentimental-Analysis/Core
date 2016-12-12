@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using Bayes.Data;
 using Bayes.Learner.Interfaces;
 using Core.Cache.Interfaces;
@@ -9,13 +11,19 @@ namespace Core.Builders
 {
     public class LearningServiceBuilder : IBuilder<ILearningService>
     {
-        private IEnumerable<Sentence> _sentences;
+        private Lazy<IEnumerable<Sentence>> _sentences;
         private ITweetLearner _tweetLearner;
         private ICacheService _cacheService;
 
         public static LearningServiceBuilder LearningService => new LearningServiceBuilder();
 
         public LearningServiceBuilder WithSentences(params Sentence[] sentences)
+        {
+            _sentences = new Lazy<IEnumerable<Sentence>>(() => sentences);
+            return this;
+        }
+
+        public LearningServiceBuilder WithLazySentences(Lazy<IEnumerable<Sentence>> sentences)
         {
             _sentences = sentences;
             return this;
