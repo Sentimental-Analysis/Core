@@ -18,7 +18,7 @@ namespace Core.Tests.Services
             var unitOfWorkMock = new UnitOfWorkMock(dbTweetRepositoryMock.Object, apiTweetRepositoryMock.Object).Mock();
             var service = new TweetService(unitOfWorkMock.Object, sentimentalAnalyzeServiceMocks.Object);
 
-            var tweets = service.GetTweetByKey(TweetRepositoryMock.DbKeyWithNull);
+            var tweets = service.GetTweetScoreByKey(TweetRepositoryMock.DbKeyWithNull);
             dbTweetRepositoryMock.Verify(x => x.FindByKey(It.Is<TweetQuery>(query => query.Key == TweetRepositoryMock.DbKeyWithNull)), Times.Once);
             apiTweetRepositoryMock.Verify(x => x.Get(It.IsAny<TweetQuery>()), Times.Once);
             sentimentalAnalyzeServiceMocks.Verify(x => x.Analyze(It.IsAny<IEnumerable<Tweet>>()), Times.Once);
@@ -33,7 +33,7 @@ namespace Core.Tests.Services
             var unitOfWorkMock = new UnitOfWorkMock(dbTweetRepositoryMock.Object, apiTweetRepositoryMock.Object).Mock();
             var service = new TweetService(unitOfWorkMock.Object, sentimentalAnalyzeServiceMocks.Object);
 
-            var testResult = service.GetTweetByKey(TweetRepositoryMock.DbKeyWithList);
+            var testResult = service.GetTweetScoreByKey(TweetRepositoryMock.DbKeyWithList);
             dbTweetRepositoryMock.Verify(x => x.FindByKey(It.Is<TweetQuery>(query => query.Key == TweetRepositoryMock.DbKeyWithList)), Times.Once);
             apiTweetRepositoryMock.Verify(x => x.Get(It.IsAny<TweetQuery>()), Times.Never);
             sentimentalAnalyzeServiceMocks.Verify(x => x.Analyze(It.IsAny<IEnumerable<Tweet>>()), Times.Never);

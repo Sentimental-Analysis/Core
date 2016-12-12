@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bayes.Data;
+using Bayes.Utils;
 using Core.Models;
 using Core.Services.Interfaces;
 using Core.UnitOfWork.Interfaces;
+using Core.Utils;
 
 namespace Core.Services.Implementations
 {
@@ -21,22 +24,22 @@ namespace Core.Services.Implementations
         }
 
 
-        public Result<IEnumerable<Tweet>> GetTweetByKey(string key)
+        public Result<AnalysisScore> GetTweetScoreByKey(string key)
         {
             var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000)).ToList();
 
-            if (dbResult.Any()) return Result<IEnumerable<Tweet>>.Wrap(dbResult.AsEnumerable());
+            if (dbResult.Any()) return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(dbResult));
 
             var apiResult = _unitOfWork.ApiTweets.Get(new TweetQuery(key));
             var analyzedTweets = _sentimentalAnalysisService.Analyze(apiResult);
 
-            if (!analyzedTweets.IsSuccess) return Result<IEnumerable<Tweet>>.Error();
+            if (!analyzedTweets.IsSuccess) return Result<AnalysisScore>.Error();
 
             _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
-            return analyzedTweets;
+            return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(analyzedTweets.Value));
         }
 
-        public async Task<Result<IEnumerable<Tweet>>> GetTweetByKeyAsync(string key)
+        public async Task<Result<AnalysisScore>> GetTweetScoreByKeyAsync(string key)
         {
             var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000)).ToList();
 
@@ -47,11 +50,11 @@ namespace Core.Services.Implementations
                 if (analyzedTweets.IsSuccess)
                 {
                     _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
-                    return analyzedTweets;
+                    return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(analyzedTweets.Value));
                 }
-                return Result<IEnumerable<Tweet>>.Error();
+                return Result<AnalysisScore>.Error();
             }
-            return Result<IEnumerable<Tweet>>.Wrap(dbResult.AsEnumerable());
+            return Result<IEnumerable<Tweet>>.Wrap(AnalysisScore.FromTweets(dbResult));
         }
 
         public void Dispose()
