@@ -20,7 +20,6 @@ namespace Core.Database.Implementations
 
         public static ICassandraConnection Connect(Cluster cluster)
         {
-            MappingConfiguration.Global.Define<TweetMapping>();
             var session = cluster.ConnectAndCreateDefaultKeyspaceIfNotExists();
             session.GetTable<Tweet>().CreateIfNotExists();           
             var mapper = new Mapper(session);

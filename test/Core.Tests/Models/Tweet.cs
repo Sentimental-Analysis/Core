@@ -1,4 +1,5 @@
-﻿using Core.Models;
+﻿using Bayes.Data;
+using Core.Models;
 using FluentAssertions;
 using Xunit;
 
@@ -9,9 +10,9 @@ namespace Core.Tests.Models
         [Fact]
         public void Test_Creation_New_Twwet_With_Sentiment()
         {
-            var tweet = new Tweet() {Sentiment = 0};
-            var testResult = tweet.WithNewSentiment(5);
-            testResult.Sentiment.Should().Be(5);
+            var tweet = new Tweet() {Sentiment = WordCategory.Positive};
+            var testResult = tweet.WithNewSentiment(WordCategory.Negative);
+            testResult.Sentiment.Should().Be(WordCategory.Negative);
         }
     }
 }
