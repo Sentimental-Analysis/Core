@@ -44,9 +44,9 @@ namespace Core.Services.Implementations
             using (tweets.ToObservable()
                 .Retry(5)
                 .SubscribeOn(Scheduler.Default)
-                .Subscribe(async tweet => { await buffer.SendAsync(tweet); },
-                    ex => { ((IDataflowBlock)buffer).Fault(ex); },
-                    () => { buffer.Complete(); }))
+                .Subscribe(onNext: async tweet => { await buffer.SendAsync(tweet); },
+                    onError: ex => { ((IDataflowBlock)buffer).Fault(ex); },
+                    onCompleted: () => { buffer.Complete(); }))
             {
                 await Task.WhenAll(buffer.Completion);
                 await Task.WhenAll(classifiers.Select(x => x.Completion).ToArray());
