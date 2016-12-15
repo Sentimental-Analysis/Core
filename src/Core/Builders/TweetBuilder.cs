@@ -16,6 +16,12 @@ namespace Core.Builders
         public double Latitude { get; set; }
         public WordCategory Sentiment { get; set; }
 
+        public TweetBuilder WithSentiment(WordCategory sentiment)
+        {
+            Sentiment = sentiment;
+            return this;
+        }
+
         public TweetBuilder(Tweet tweet)
         {
             Id = tweet.Id;
