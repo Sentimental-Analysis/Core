@@ -28,12 +28,18 @@ namespace Core.Services.Implementations
         {
             var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000)).ToList();
 
-            if (dbResult.Any()) return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(dbResult));
+            if (dbResult.Any())
+            {
+                return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(dbResult));
+            }
 
             var apiResult = _unitOfWork.ApiTweets.Get(new TweetQuery(key));
             var analyzedTweets = _sentimentalAnalysisService.Analyze(apiResult);
 
-            if (!analyzedTweets.IsSuccess) return Result<AnalysisScore>.Error();
+            if (!analyzedTweets.IsSuccess)
+            {
+                return Result<AnalysisScore>.Error();
+            }
 
             _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
             return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(analyzedTweets.Value));
