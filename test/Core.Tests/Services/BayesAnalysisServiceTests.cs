@@ -7,8 +7,8 @@ using Bayes.Data;
 using Bayes.Learner.Implementations;
 using Core.Models;
 using Core.Services.Implementations;
-using Core.Tests.Builders;
 using Core.Tests.Stubs;
+using Core.Tests.TestAbstractions;
 using FluentAssertions;
 using Xunit;
 using static Core.Tests.Builders.TestLearnStateBuilder;
@@ -16,7 +16,7 @@ using static Core.Builders.LearningServiceBuilder;
 
 namespace Core.Tests.Services
 {
-    public class BayesAnalysisServiceTests
+    public class BayesAnalysisServiceTests : Test
     {
         [Fact]
         public void Test_Classifier_When_All_Tweets_Are_Negative()
@@ -26,9 +26,9 @@ namespace Core.Tests.Services
             var learningService = LearningService.WithCacheService(new CacheServiceForTests()).WithLearner(new TweetLearner()).WithSentences(initSentences).Build();
 
             var service = new BayesAnalysisService(learningService, new TweetClassifier());
-            var testResult = service.Analyze(new List<Tweet>()
+            var testResult = service.Analyze(new List<Tweet>
             {
-                new Tweet()
+                new Tweet
                 {
                     Text = "fuck and suck"
                 }
@@ -47,9 +47,9 @@ namespace Core.Tests.Services
 
             var service = new BayesAnalysisService(learningService, new TweetClassifier());
 
-            var testResult = service.Analyze(new List<Tweet>()
+            var testResult = service.Analyze(new List<Tweet>
             {
-                new Tweet()
+                new Tweet
                 {
                     Text = "love and sun"
                 }
@@ -67,9 +67,9 @@ namespace Core.Tests.Services
             var learningService = LearningService.WithCacheService(new CacheServiceForTests()).WithLearner(new TweetLearner()).WithSentences(initSentences).Build();
 
             var service = new BayesAnalysisService(learningService, new TweetClassifier());
-            var testResult = await service.AnalyzeAsync(new List<Tweet>()
+            var testResult = await service.AnalyzeAsync(new List<Tweet>
             {
-                new Tweet()
+                new Tweet
                 {
                     Text = "fuck and suck"
                 }
@@ -88,9 +88,9 @@ namespace Core.Tests.Services
 
             var service = new BayesAnalysisService(learningService, new TweetClassifier());
 
-            var testResult = await service.AnalyzeAsync(new List<Tweet>()
+            var testResult = await service.AnalyzeAsync(new List<Tweet>
             {
-                new Tweet()
+                new Tweet
                 {
                     Text = "love and sun"
                 }
@@ -110,7 +110,7 @@ namespace Core.Tests.Services
 
             var service = new BayesAnalysisService(learningService, new TweetClassifier());
 
-            var testResult = await service.AnalyzeAsync(Enumerable.Range(0, 10000).Select(x => new Tweet()
+            var testResult = await service.AnalyzeAsync(Enumerable.Range(0, 10000).Select(x => new Tweet
             {
                 Text = "love and sun"
             }).ToList());
@@ -129,18 +129,13 @@ namespace Core.Tests.Services
 
             var service = new BayesAnalysisService(learningService, new TweetClassifier());
 
-            var testResult = service.Analyze(Enumerable.Range(0, 10000).Select(x => new Tweet()
+            var testResult = service.Analyze(Enumerable.Range(0, 10000).Select(x => new Tweet
             {
                 Text = "love and sun"
             }).ToList());
 
             testResult.IsSuccess.Should().BeTrue();
             testResult.Value.First().Sentiment.Should().Be(WordCategory.Positive);
-        }
-
-        public T A<T>(IBuilder<T> builder)
-        {
-            return builder.Build();
         }
     }
 }
