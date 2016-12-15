@@ -1,5 +1,6 @@
 ﻿using System;
 using Bayes.Data;
+using Core.Builders;
 
 namespace Core.Models
 {
@@ -14,15 +15,6 @@ namespace Core.Models
         public double Longitude { get; set; }
         public double Latitude { get; set; }
         public WordCategory Sentiment { get; set; }
-
-        public Tweet WithNewSentiment(WordCategory sentiment)
-        {
-            var clonedTweet = MemberwiseClone() as Tweet;
-            if (clonedTweet != null)
-            {
-                clonedTweet.Sentiment = sentiment;
-            }
-            return clonedTweet;
-        }
+        public TweetBuilder Builder => new TweetBuilder(this);
     }
 }

@@ -26,18 +26,20 @@ namespace Core.Services.Implementations
         public async Task<Result<IEnumerable<Tweet>>> AnalyzeAsync(IEnumerable<Tweet> tweets)
         {
             var buffer =
-                new BufferBlock<Tweet>(new DataflowBlockOptions() {BoundedCapacity = Environment.ProcessorCount * 5});
+                new BufferBlock<Tweet>(new DataflowBlockOptions {BoundedCapacity = Environment.ProcessorCount * 5});
             var learnerState = _learningService.Get();
             var result = new List<Tweet>();
             var classifier = new ActionBlock<Tweet>(x =>
             {
                 var res = _tweetClassifier.Classify(x.Text, learnerState);
-                result.Add(x.WithNewSentiment(res.Sentence.Category));
-            }, new ExecutionDataflowBlockOptions() {BoundedCapacity = 1});
+                var tweetBuilder = x.Builder;
+                tweetBuilder.Sentiment = res.Sentence.Category;
+                result.Add(tweetBuilder.Build());
+            }, new ExecutionDataflowBlockOptions {BoundedCapacity = 1});
 
             var classifiers = Enumerable.Range(0, Environment.ProcessorCount).Select(x => classifier).ToList();
 
-            var linkToOptions = new DataflowLinkOptions() {PropagateCompletion = true};
+            var linkToOptions = new DataflowLinkOptions {PropagateCompletion = true};
             classifiers.ForEach(x => buffer.LinkTo(x, linkToOptions));
 
             using (tweets.ToObservable()
@@ -60,7 +62,9 @@ namespace Core.Services.Implementations
             var result = tweets.AsParallel().WithDegreeOfParallelism(Environment.ProcessorCount).Select(x =>
             {
                 var res = _tweetClassifier.Classify(x.Text, learnerState);
-                return x.WithNewSentiment(res.Sentence.Category);
+                var tweetBuilder = x.Builder;
+                tweetBuilder.Sentiment = res.Sentence.Category;
+                return tweetBuilder.Build();
             }).ToList();
             _learningService.Learn(result.Select(x => new Sentence(x.Text, x.Sentiment)));
             return Result<IEnumerable<Tweet>>.Wrap(result.AsEnumerable());
