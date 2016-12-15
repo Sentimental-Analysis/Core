@@ -1,11 +1,11 @@
 ﻿using System;
 using Cassandra;
-using Core.Database.Implementations;
 using Core.Database.Interfaces;
 using Core.Models;
 using Core.Repositories.Implementations;
 using Core.Repositories.Interfaces;
 using Core.UnitOfWork.Interfaces;
+using static Core.Builders.CassandraConnectionBuilder;
 
 namespace Core.UnitOfWork.Implementations
 {
@@ -16,7 +16,7 @@ namespace Core.UnitOfWork.Implementations
 
         public DefaultUnitOfWork(Cluster cluster, TwitterApiCredentials credentials)
         {
-            _connection = DefaultCassandraConnection.Connect(cluster);
+            _connection = Connection(cluster).Build();
             Tweets = new DatabaseTweetRepository(_connection);
             ApiTweets = new ApiTweetRepository(credentials);
         }

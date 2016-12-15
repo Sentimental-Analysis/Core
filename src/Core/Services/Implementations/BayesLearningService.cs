@@ -27,29 +27,29 @@ namespace Core.Services.Implementations
         {
             var serializableState =  _cacheService.GetOrStore(_learnStateCacheKey, () =>
             {
-                return SerializableLearnerState.FromImmutableLearnerState(_sentences.Value.Aggregate(LearnerState.Empty, (state, sentence) => _learner.Learn(state, sentence)));
+                return _sentences.Value.Aggregate(LearnerState.Empty, (state, sentence) => _learner.Learn(state, sentence)).Builder;
             }, TimeSpan.FromDays(1));
 
-            return SerializableLearnerState.ToImmutableLearnerState(serializableState);
+            return serializableState.Build();
         }
 
         public LearnerState Learn(IEnumerable<Sentence> sentences)
         {
             var oldState = Get();
             _cacheService.Clear(_learnStateCacheKey);
-            var mutableState =  _cacheService.GetOrStore(_learnStateCacheKey, () =>
+            var learnerStateBuilder =  _cacheService.GetOrStore(_learnStateCacheKey, () =>
             {
-                return SerializableLearnerState.FromImmutableLearnerState(sentences.Aggregate(oldState, (state, sentence) => _learner.Learn(state, sentence)));
+                return sentences.Aggregate(oldState, (state, sentence) => _learner.Learn(state, sentence)).Builder;
             }, TimeSpan.FromDays(1));
-            return SerializableLearnerState.ToImmutableLearnerState(mutableState);
+            return learnerStateBuilder.Build();
         }
 
         public LearnerState LearnOne(Sentence sentence)
         {
             var oldState = Get();
             _cacheService.Clear(_learnStateCacheKey);
-            var mutableState = _cacheService.GetOrStore(_learnStateCacheKey, () => SerializableLearnerState.FromImmutableLearnerState(_learner.Learn(oldState, sentence)), TimeSpan.FromDays(1));
-            return SerializableLearnerState.ToImmutableLearnerState(mutableState);
+            var builder = _cacheService.GetOrStore(_learnStateCacheKey, () => _learner.Learn(oldState, sentence).Builder, TimeSpan.FromDays(1));
+            return builder.Build();
         }
     }
 }
