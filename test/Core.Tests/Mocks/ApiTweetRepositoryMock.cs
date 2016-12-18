@@ -10,7 +10,7 @@ namespace Core.Tests.Mocks
         public Mock<ITweetApiRepository> Mock()
         {
             var mock = new Mock<ITweetApiRepository>();
-            mock.Setup(x => x.Get(It.IsAny<TweetQuery>())).Returns(new List<Tweet>() {new Tweet()});
+            mock.Setup(x => x.Get(It.IsAny<TweetQuery>())).Returns(new List<Tweet>() {new Tweet() {Text = "AAA aaa"}});
             return mock;
         }
     }
