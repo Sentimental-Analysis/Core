@@ -18,16 +18,19 @@ namespace Core.Models
         public static AnalysisScore FromTweets(IEnumerable<Tweet> tweets, string key)
         {
             var tweetsList = tweets.ToList();
-            var keywords = tweetsList.SelectMany(x => x.Text.Tokenize()).Aggregate(ImmutableDictionary<string, int>.Empty,
-                (acc, x) =>
-                {
-                    int value;
-                    if (acc.TryGetValue(x, out value))
-                    {
-                        return acc.SetItem(x, value + 1);
-                    }
-                    return acc.Add(x, 1);
-                }).Select(x => new KeyWord(x.Key, x.Value)).OrderByDescending(x => x.Quantity).ToList();
+            var keywords =
+                tweetsList.SelectMany(x => x.Text.Tokenize())
+                    .Where(x => !string.IsNullOrEmpty(x))
+                    .Aggregate(ImmutableDictionary<string, int>.Empty,
+                        (acc, x) =>
+                        {
+                            int value;
+                            if (acc.TryGetValue(x, out value))
+                            {
+                                return acc.SetItem(x, value + 1);
+                            }
+                            return acc.Add(x, 1);
+                        }).Select(x => new KeyWord(x.Key, x.Value)).OrderByDescending(x => x.Quantity).Take(50).ToList();
 
             var negativeQuantity = tweetsList.Count(tweet => tweet.Sentiment == WordCategory.Negative);
             var positiveQuantity = tweetsList.Count(tweet => tweet.Sentiment == WordCategory.Positive);
