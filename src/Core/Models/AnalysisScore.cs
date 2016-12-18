@@ -27,7 +27,7 @@ namespace Core.Models
                         return acc.SetItem(x, value + 1);
                     }
                     return acc.Add(x, 1);
-                }).Select(x => new KeyWord(){ Key = x.Key, Quantity = x.Value}).OrderByDescending(x => x.Quantity).ToList();
+                }).Select(x => new KeyWord(x.Key, x.Value)).OrderByDescending(x => x.Quantity).ToList();
 
             var negativeQuantity = tweetsList.Count(tweet => tweet.Sentiment == WordCategory.Negative);
             var positiveQuantity = tweetsList.Count(tweet => tweet.Sentiment == WordCategory.Positive);

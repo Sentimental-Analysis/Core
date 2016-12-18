@@ -19,11 +19,10 @@ namespace Core.Tests.Models
                 new Tweet { Sentiment = WordCategory.Positive, Text = "Test Positive Tweet"}
             };
 
-            var score = AnalysisScore.FromTweets(tweets);
+            var score = AnalysisScore.FromTweets(tweets, "negative");
             score.Sentiment.Should().Be(GeneralSentiment.Negative);
             score.NegativeTweetsQuantity.Should().Be(3);
             score.PositiveTweetsQuantity.Should().Be(1);
-            score.KeyWords.Should().BeEquivalentTo("test", "negative", "positive", "tweet");
         }
 
         [Fact]
@@ -37,11 +36,10 @@ namespace Core.Tests.Models
                 new Tweet { Sentiment = WordCategory.Positive, Text = "Test Positive Tweet"}
             };
 
-            var score = AnalysisScore.FromTweets(tweets);
+            var score = AnalysisScore.FromTweets(tweets, "positive");
             score.Sentiment.Should().Be(GeneralSentiment.Positive);
             score.NegativeTweetsQuantity.Should().Be(1);
             score.PositiveTweetsQuantity.Should().Be(3);
-            score.KeyWords.Should().BeEquivalentTo("test", "negative", "positive", "tweet");
         }
 
         [Fact]
@@ -55,11 +53,10 @@ namespace Core.Tests.Models
                 new Tweet { Sentiment = WordCategory.Negative, Text = "Test negative Tweet"}
             };
 
-            var score = AnalysisScore.FromTweets(tweets);
+            var score = AnalysisScore.FromTweets(tweets, "test");
             score.Sentiment.Should().Be(GeneralSentiment.Neutral);
             score.NegativeTweetsQuantity.Should().Be(2);
-            score.PositiveTweetsQuantity.Should().Be(2);
-            score.KeyWords.Should().BeEquivalentTo("test", "negative", "positive", "tweet");
+            score.PositiveTweetsQuantity.Should().Be(2);;
         }
     }
 }
