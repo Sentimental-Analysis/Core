@@ -6,7 +6,7 @@ namespace Core.Services.Interfaces
 {
     public interface ITweetService : IService
     {
-        Result<IEnumerable<Tweet>> GetTweetByKey(string key);
-        Task<Result<IEnumerable<Tweet>>> GetTweetByKeyAsync(string key);
+        Result<AnalysisScore> GetTweetScoreByKey(string key);
+        Task<Result<AnalysisScore>> GetTweetScoreByKeyAsync(string key);
     }
 }

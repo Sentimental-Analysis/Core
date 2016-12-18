@@ -13,5 +13,45 @@ namespace Core.Utils
                 yield return source.Skip(size * i).Take(size).ToList();
             }
         }
+
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            if (keySelector == null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            var seenKeys = new HashSet<TKey>();
+            using (var sourceIterator = source.GetEnumerator())
+            {
+                if (!sourceIterator.MoveNext())
+                {
+                    throw new ArgumentNullException("Seqence conatins no elements");
+                }
+                var current = sourceIterator.Current;
+                var element = keySelector.Invoke(current);
+                if (seenKeys.Add(element))
+                {
+                    yield return current;
+                }
+
+                while (sourceIterator.MoveNext())
+                {
+                    current = sourceIterator.Current;
+                    element = keySelector.Invoke(current);
+                    if (seenKeys.Add(element))
+                    {
+                        yield return current;
+                    }
+                }
+
+
+            }
+        }
     }
 }
