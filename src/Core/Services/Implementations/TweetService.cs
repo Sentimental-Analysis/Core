@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Bayes.Data;
-using Bayes.Utils;
 using Core.Models;
 using Core.Services.Interfaces;
 using Core.UnitOfWork.Interfaces;
-using Core.Utils;
 
 namespace Core.Services.Implementations
 {
@@ -30,7 +27,7 @@ namespace Core.Services.Implementations
 
             if (dbResult.Any())
             {
-                return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(dbResult));
+                return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(dbResult, key));
             }
 
             var apiResult = _unitOfWork.ApiTweets.Get(new TweetQuery(key));
@@ -42,7 +39,7 @@ namespace Core.Services.Implementations
             }
 
             _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
-            return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(analyzedTweets.Value));
+            return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(analyzedTweets.Value, key));
         }
 
         public async Task<Result<AnalysisScore>> GetTweetScoreByKeyAsync(string key)
@@ -56,11 +53,11 @@ namespace Core.Services.Implementations
                 if (analyzedTweets.IsSuccess)
                 {
                     _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
-                    return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(analyzedTweets.Value));
+                    return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(analyzedTweets.Value, key));
                 }
                 return Result<AnalysisScore>.Error();
             }
-            return Result<IEnumerable<Tweet>>.Wrap(AnalysisScore.FromTweets(dbResult));
+            return Result<IEnumerable<Tweet>>.Wrap(AnalysisScore.FromTweets(dbResult, key));
         }
 
         public void Dispose()
