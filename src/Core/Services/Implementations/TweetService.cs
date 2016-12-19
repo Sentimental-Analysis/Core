@@ -25,7 +25,7 @@ namespace Core.Services.Implementations
         {
             var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000)).ToList();
 
-            if (dbResult.Any())
+            if (dbResult.Count > 0)
             {
                 return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(dbResult, key));
             }
@@ -46,18 +46,19 @@ namespace Core.Services.Implementations
         {
             var dbResult = _unitOfWork.Tweets.FindByKey(new TweetQuery(key, 100000)).ToList();
 
-            if (!dbResult.Any())
+            if (dbResult.Count > 0)
             {
-                var apiResult = _unitOfWork.ApiTweets.Get(new TweetQuery(key));
-                var analyzedTweets = await _sentimentalAnalysisService.AnalyzeAsync(apiResult);
-                if (analyzedTweets.IsSuccess)
-                {
-                    _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
-                    return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(analyzedTweets.Value, key));
-                }
-                return Result<AnalysisScore>.Error();
+                return Result<IEnumerable<Tweet>>.Wrap(AnalysisScore.FromTweets(dbResult, key));
             }
-            return Result<IEnumerable<Tweet>>.Wrap(AnalysisScore.FromTweets(dbResult, key));
+
+            var apiResult = _unitOfWork.ApiTweets.Get(new TweetQuery(key));
+            var analyzedTweets = await _sentimentalAnalysisService.AnalyzeAsync(apiResult);
+            if (analyzedTweets.IsSuccess)
+            {
+                _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
+                return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(analyzedTweets.Value, key));
+            }
+            return Result<AnalysisScore>.Error();
         }
 
         public void Dispose()
