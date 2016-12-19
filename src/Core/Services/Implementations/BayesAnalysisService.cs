@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
@@ -28,7 +29,7 @@ namespace Core.Services.Implementations
             var buffer =
                 new BufferBlock<Tweet>(new DataflowBlockOptions {BoundedCapacity = Environment.ProcessorCount * 5});
             var learnerState = _learningService.Get();
-            var result = new List<Tweet>();
+            var result = new ConcurrentBag<Tweet>();
             var classifier = new ActionBlock<Tweet>(x =>
             {
                 var res = _tweetClassifier.Classify(x.Text, learnerState);
