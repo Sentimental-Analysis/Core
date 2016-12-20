@@ -4,6 +4,7 @@ using System.Linq;
 using Bayes.Data;
 using Bayes.Utils;
 using Core.Models;
+using Core.Utils;
 
 namespace Core.Builders
 {
@@ -22,7 +23,7 @@ namespace Core.Builders
             var tweetsList = tweets.ToList();
             var keywords =
                 tweetsList.SelectMany(x => x.Text.Tokenize())
-                    .Where(x => !string.IsNullOrEmpty(x))
+                    .FilterShortWord()
                     .Aggregate(ImmutableDictionary<string, int>.Empty,
                         (acc, x) =>
                         {
