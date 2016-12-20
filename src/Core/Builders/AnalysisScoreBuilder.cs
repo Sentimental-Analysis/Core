@@ -28,7 +28,7 @@ namespace Core.Builders
         {
             var tweetsList = tweets.ToList();
             var keywords =
-                tweetsList.SelectMany(x => x.Text.Tokenize())
+                tweetsList?.SelectMany(x => x.Text.Tokenize())
                     .FilterShortWord()
                     .Aggregate(ImmutableDictionary<string, int>.Empty,
                         (acc, x) =>
@@ -39,7 +39,7 @@ namespace Core.Builders
                                 return acc.SetItem(x, value + 1);
                             }
                             return acc.Add(x, 1);
-                        }).Select(x => new KeyWord(x.Key, x.Value)).OrderByDescending(x => x.Quantity).Take(50).ToList();
+                        }).Select(x => new KeyWord(x.Key, x.Value)).OrderByDescending(x => x.Quantity).Take(50).ToList() ?? new List<KeyWord>();
 
             var negativeQuantity = tweetsList.Count(tweet => tweet.Sentiment == WordCategory.Negative);
             var positiveQuantity = tweetsList.Count(tweet => tweet.Sentiment == WordCategory.Positive);
