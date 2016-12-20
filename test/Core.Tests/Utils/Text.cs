@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Core.Utils;
+using FluentAssertions;
 using Xunit;
 
 namespace Core.Tests.Utils
