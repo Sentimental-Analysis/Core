@@ -9,11 +9,13 @@ namespace Core.Builders
 {
     public class AnalysisScoreBuilder : IBuilder<AnalysisScore>
     {
-        public GeneralSentiment Sentiment { get; set; }
-        public int PositiveTweetsQuantity { get; set; }
-        public int NegativeTweetsQuantity { get; set; }
-        public IEnumerable<KeyWord> KeyWords { get; set; }
-        public string Key { get; set; }
+        private readonly GeneralSentiment _sentiment;
+        private readonly int _positiveTweetsQuantity;
+        private readonly int _negativeTweetsQuantity;
+        private readonly IEnumerable<KeyWord> _keyWords;
+        private readonly string _key;
+
+        public static AnalysisScoreBuilder AnalysisScore(IEnumerable<Tweet> tweets, string key) => new AnalysisScoreBuilder(tweets, key);
 
         public AnalysisScoreBuilder(IEnumerable<Tweet> tweets, string key)
         {
@@ -38,16 +40,23 @@ namespace Core.Builders
                 ? GeneralSentiment.Negative
                 : negativeQuantity == positiveQuantity ? GeneralSentiment.Neutral : GeneralSentiment.Positive;
 
-            KeyWords = keywords;
-            NegativeTweetsQuantity = negativeQuantity;
-            PositiveTweetsQuantity = positiveQuantity;
-            Sentiment = sentimentResult;
-            Key = key;
+            _keyWords = keywords;
+            _negativeTweetsQuantity = negativeQuantity;
+            _positiveTweetsQuantity = positiveQuantity;
+            _sentiment = sentimentResult;
+            _key = key;
         }
 
         public AnalysisScore Build()
         {
-            throw new System.NotImplementedException();
+            return new AnalysisScore
+            {
+                Sentiment = _sentiment,
+                Key = _key,
+                PositiveTweetsQuantity = _positiveTweetsQuantity,
+                NegativeTweetsQuantity = _negativeTweetsQuantity,
+                KeyWords = _keyWords,
+            };
         }
     }
 }

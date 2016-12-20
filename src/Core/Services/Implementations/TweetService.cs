@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Builders;
 using Core.Models;
 using Core.Services.Interfaces;
 using Core.UnitOfWork.Interfaces;
@@ -27,7 +28,7 @@ namespace Core.Services.Implementations
 
             if (dbResult.Count > 0)
             {
-                return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(dbResult, key));
+                return Result<AnalysisScore>.Wrap(AnalysisScoreBuilder.AnalysisScore(dbResult, key).Build());
             }
 
             var apiResult = _unitOfWork.ApiTweets.Get(new TweetQuery(key));
@@ -39,7 +40,7 @@ namespace Core.Services.Implementations
             }
 
             _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
-            return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(analyzedTweets.Value, key));
+            return Result<AnalysisScore>.Wrap(AnalysisScoreBuilder.AnalysisScore(analyzedTweets.Value, key).Build());
         }
 
         public async Task<Result<AnalysisScore>> GetTweetScoreByKeyAsync(string key)
@@ -48,7 +49,7 @@ namespace Core.Services.Implementations
 
             if (dbResult.Count > 0)
             {
-                return Result<IEnumerable<Tweet>>.Wrap(AnalysisScore.FromTweets(dbResult, key));
+                return Result<IEnumerable<Tweet>>.Wrap(AnalysisScoreBuilder.AnalysisScore(dbResult, key).Build());
             }
 
             var apiResult = _unitOfWork.ApiTweets.Get(new TweetQuery(key));
@@ -56,7 +57,7 @@ namespace Core.Services.Implementations
             if (analyzedTweets.IsSuccess)
             {
                 _unitOfWork.Tweets.AddRange(analyzedTweets.Value);
-                return Result<AnalysisScore>.Wrap(AnalysisScore.FromTweets(analyzedTweets.Value, key));
+                return Result<AnalysisScore>.Wrap(AnalysisScoreBuilder.AnalysisScore(analyzedTweets.Value, key).Build());
             }
             return Result<AnalysisScore>.Error();
         }
