@@ -16,7 +16,39 @@ namespace Core.Utils
 
         public static IEnumerable<string> FilterShortWord(this IEnumerable<string> source)
         {
-            return source.Where(word => !string.IsNullOrEmpty(word) && word.Length > 3);
+
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            Func<string, bool> predicate = word => !string.IsNullOrEmpty(word) && word.Length > 3;
+
+            using (var sourceIterator = source.GetEnumerator())
+            {
+                if (!sourceIterator.MoveNext())
+                {
+                    throw new ArgumentNullException("Seqence conatins no elements");
+                }
+
+                var current = sourceIterator.Current;
+
+                if (predicate(current))
+                {
+                    yield return current;
+                }
+
+                while (sourceIterator.MoveNext())
+                {
+                    current = sourceIterator.Current;
+                    if (predicate(current))
+                    {
+                        yield return current;
+                    }
+                }
+
+
+            }
         }
 
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
