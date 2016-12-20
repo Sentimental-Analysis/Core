@@ -16,7 +16,7 @@ namespace Core.Tests.Mocks
         {
             var mock = new Mock<ITweetRepository>();
             mock.Setup(x => x.FindByKey(It.Is<TweetQuery>(query => query.Key == DbKeyWithNull))).Returns(Enumerable.Empty<Tweet>).Verifiable();
-            mock.Setup(x => x.FindByKey(It.Is<TweetQuery>(query => query.Key == DbKeyWithList))).Returns(() => new List<Tweet>() { new Tweet() }).Verifiable();
+            mock.Setup(x => x.FindByKey(It.Is<TweetQuery>(query => query.Key == DbKeyWithList))).Returns(() => new List<Tweet>() { new Tweet() {Text = "AAA aaa"} }).Verifiable();
             return mock;
         }
     }
