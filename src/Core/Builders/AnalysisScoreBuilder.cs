@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Bayes.Data;
@@ -10,15 +11,20 @@ namespace Core.Builders
 {
     public class AnalysisScoreBuilder : IBuilder<AnalysisScore>
     {
-        private readonly GeneralSentiment _sentiment;
-        private readonly int _positiveTweetsQuantity;
-        private readonly int _negativeTweetsQuantity;
-        private readonly IEnumerable<KeyWord> _keyWords;
         private readonly string _key;
+        private readonly IEnumerable<Tweet> _tweets;
 
-        public static AnalysisScoreBuilder AnalysisScore(IEnumerable<Tweet> tweets, string key) => new AnalysisScoreBuilder(tweets, key);
+
+        public static AnalysisScoreBuilder AnalysisScore(IEnumerable<Tweet> tweets, string key)
+            => new AnalysisScoreBuilder(tweets, key);
 
         public AnalysisScoreBuilder(IEnumerable<Tweet> tweets, string key)
+        {
+            _key = key;
+            _tweets = tweets;
+        }
+
+        private AnalysisScore FromTweets(IEnumerable<Tweet> tweets, string key)
         {
             var tweetsList = tweets.ToList();
             var keywords =
@@ -41,23 +47,27 @@ namespace Core.Builders
                 ? GeneralSentiment.Negative
                 : negativeQuantity == positiveQuantity ? GeneralSentiment.Neutral : GeneralSentiment.Positive;
 
-            _keyWords = keywords;
-            _negativeTweetsQuantity = negativeQuantity;
-            _positiveTweetsQuantity = positiveQuantity;
-            _sentiment = sentimentResult;
-            _key = key;
+            var localizations =
+                tweetsList.Where(
+                        tweet =>
+                            Math.Abs(tweet.Longitude - default(double)) > double.Epsilon &&
+                            Math.Abs(tweet.Latitude - default(double)) > double.Epsilon)
+                    .Select(tweet => new Localization(tweet.Longitude, tweet.Latitude));
+
+            return new AnalysisScore
+            {
+                Sentiment = sentimentResult,
+                Key = key,
+                PositiveTweetsQuantity = positiveQuantity,
+                NegativeTweetsQuantity = negativeQuantity,
+                Localizations = localizations,
+                KeyWords = keywords,
+            };
         }
 
         public AnalysisScore Build()
         {
-            return new AnalysisScore
-            {
-                Sentiment = _sentiment,
-                Key = _key,
-                PositiveTweetsQuantity = _positiveTweetsQuantity,
-                NegativeTweetsQuantity = _negativeTweetsQuantity,
-                KeyWords = _keyWords,
-            };
+            return FromTweets(_tweets, _key);
         }
     }
 }

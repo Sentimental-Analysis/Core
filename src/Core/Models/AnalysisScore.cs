@@ -8,6 +8,7 @@ namespace Core.Models
         public int PositiveTweetsQuantity { get; set; }
         public int NegativeTweetsQuantity { get; set; }
         public IEnumerable<KeyWord> KeyWords { get; set; }
+        public IEnumerable<Localization> Localizations { get; set; }
         public string Key { get; set; }
     }
 }
