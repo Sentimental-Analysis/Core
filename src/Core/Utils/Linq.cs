@@ -16,7 +16,7 @@ namespace Core.Utils
 
         public static IEnumerable<string> FilterShortWord(this IEnumerable<string> source)
         {
-            return source.Where(word => word.Length > 3);
+            return source.Where(word => !string.IsNullOrEmpty(word) && word.Length > 3);
         }
 
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
