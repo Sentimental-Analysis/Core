@@ -63,6 +63,7 @@ namespace Core.Builders
                 NegativeTweetsQuantity = negativeQuantity,
                 Localizations = localizations,
                 KeyWords = keywords,
+                Trend = trend
             };
         }
 
