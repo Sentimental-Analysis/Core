@@ -26,5 +26,13 @@ namespace Core.Tests.Utils
             var testResult = testEnumerable.DistinctBy(x => x);
             testResult.Count().Should().Be(4);
         }
+
+        [Fact]
+        public void Test_Filter_Short_Word_Extension_Method()
+        {
+            var words = new[] { null, "1", "22", "333", "4444" };
+            var testResult = words.FilterShortWord();
+            testResult.Should().Contain("4444").And.NotContain("1", "22", "333").And.NotContainNulls();
+        }
     }
 }

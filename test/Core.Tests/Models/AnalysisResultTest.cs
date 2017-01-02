@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Bayes.Data;
+using Core.Builders;
 using Core.Models;
 using FluentAssertions;
 using Xunit;
@@ -19,7 +20,7 @@ namespace Core.Tests.Models
                 new Tweet { Sentiment = WordCategory.Positive, Text = "Test Positive Tweet"}
             };
 
-            var score = AnalysisScore.FromTweets(tweets, "negative");
+            var score = AnalysisScoreBuilder.AnalysisScore(tweets, "negative").Build();
             score.Sentiment.Should().Be(GeneralSentiment.Negative);
             score.NegativeTweetsQuantity.Should().Be(3);
             score.PositiveTweetsQuantity.Should().Be(1);
@@ -36,7 +37,7 @@ namespace Core.Tests.Models
                 new Tweet { Sentiment = WordCategory.Positive, Text = "Test Positive Tweet"}
             };
 
-            var score = AnalysisScore.FromTweets(tweets, "positive");
+            var score = AnalysisScoreBuilder.AnalysisScore(tweets, "positive").Build();
             score.Sentiment.Should().Be(GeneralSentiment.Positive);
             score.NegativeTweetsQuantity.Should().Be(1);
             score.PositiveTweetsQuantity.Should().Be(3);
@@ -53,7 +54,7 @@ namespace Core.Tests.Models
                 new Tweet { Sentiment = WordCategory.Negative, Text = "Test negative Tweet"}
             };
 
-            var score = AnalysisScore.FromTweets(tweets, "test");
+            var score = AnalysisScoreBuilder.AnalysisScore(tweets, "test").Build();
             score.Sentiment.Should().Be(GeneralSentiment.Neutral);
             score.NegativeTweetsQuantity.Should().Be(2);
             score.PositiveTweetsQuantity.Should().Be(2);;

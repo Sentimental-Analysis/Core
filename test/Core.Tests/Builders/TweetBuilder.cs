@@ -6,7 +6,7 @@ namespace Core.Tests.Builders
     public class TweetBuilder : IBuilder<Tweet>
     {
         private string _text = string.Empty;
-        private WordCategory _sentiment = 0;
+        private WordCategory _sentiment = WordCategory.Negative;
 
         public static TweetBuilder Tweet() => new TweetBuilder();
 
@@ -24,7 +24,7 @@ namespace Core.Tests.Builders
 
         public Tweet Build()
         {
-            return new Tweet()
+            return new Tweet
             {
                 Text = _text,
                 Sentiment = _sentiment
