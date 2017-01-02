@@ -48,6 +48,7 @@ namespace Core.Utils
                     return Trend.Decreasing;
                 }
             }
+            return Trend.Stable;
         }
     }
 }
