@@ -10,5 +10,6 @@ namespace Core.Models
         public IEnumerable<KeyWord> KeyWords { get; set; }
         public IEnumerable<Localization> Localizations { get; set; }
         public string Key { get; set; }
+        public Trend Trend { get; set; }
     }
 }

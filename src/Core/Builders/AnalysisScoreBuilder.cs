@@ -54,6 +54,7 @@ namespace Core.Builders
                             Math.Abs(tweet.Latitude - default(double)) > double.Epsilon)
                     .Select(tweet => new Localization(tweet.Longitude, tweet.Latitude));
 
+            var trend = Statistics.RateTrend(tweetsList.Select(x => (int)x.Sentiment));
             return new AnalysisScore
             {
                 Sentiment = sentimentResult,
