@@ -8,5 +8,6 @@ namespace Core.Repositories.Interfaces
     {
         IEnumerable<Tweet> FindByKey(TweetQuery query);
         OperationStatus AddRange(IEnumerable<Tweet> tweets);
+        IEnumerable<string> GetUniqueKeys();
     }
 }

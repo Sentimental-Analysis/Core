@@ -48,7 +48,7 @@ namespace Core.Repositories.Implementations
             }
         }
 
-        public IEnumerable<string> GetKeys()
+        public IEnumerable<string> GetUniqueKeys()
         {
             return _connection.Mapper.Fetch<Tweet>().Select(x => x.Key).Distinct();
         }
