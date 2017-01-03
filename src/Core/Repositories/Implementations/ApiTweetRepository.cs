@@ -27,7 +27,8 @@ namespace Core.Repositories.Implementations
                 SearchType = SearchResultType.Recent,
                 Lang = LanguageFilter.English,
                 Filters = TweetSearchFilters.None,
-                MaximumNumberOfResults = parameter.MaxQuantity
+                MaximumNumberOfResults = parameter.MaxQuantity,
+                Since = parameter.Since
             };
             var result = Search.SearchTweets(search);
             return result.Select(itweet => new Tweet

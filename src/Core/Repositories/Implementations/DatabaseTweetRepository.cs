@@ -48,6 +48,11 @@ namespace Core.Repositories.Implementations
             }
         }
 
+        public IEnumerable<string> GetKeys()
+        {
+            return _connection.Mapper.Fetch<Tweet>().Select(x => x.Key).Distinct();
+        }
+
         public void Dispose()
         {
             if (_shouldBeDisposed)
