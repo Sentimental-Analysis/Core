@@ -54,7 +54,7 @@ namespace Core.Repositories.Implementations
             return _connection.Mapper.Fetch<Tweet>().Select(x => x.Key).Distinct();
         }
 
-        public IDictionary<string, long> QuantityByKey(string key)
+        public IDictionary<string, long> QuantityByKey()
         {
             var all = _connection.Mapper.Fetch<Tweet>();
             return all.Aggregate(ImmutableDictionary<string, long>.Empty, (acc, tweet) =>

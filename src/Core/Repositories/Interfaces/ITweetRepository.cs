@@ -9,7 +9,7 @@ namespace Core.Repositories.Interfaces
     {
         IEnumerable<Tweet> FindByKey(TweetQuery query);
         OperationStatus AddRange(IEnumerable<Tweet> tweets);
-        IDictionary<string, long> QuantityByKey(string key);
+        IDictionary<string, long> QuantityByKey();
         IEnumerable<string> GetUniqueKeys();
     }
 }
