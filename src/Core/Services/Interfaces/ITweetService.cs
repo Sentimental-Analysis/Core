@@ -8,5 +8,6 @@ namespace Core.Services.Interfaces
     {
         Result<AnalysisScore> GetTweetScoreByKey(string key);
         Task<Result<AnalysisScore>> GetTweetScoreByKeyAsync(string key);
+        Result<IDictionary<string, long>> GetQuantityByTweetKey();
     }
 }
