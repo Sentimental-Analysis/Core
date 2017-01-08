@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Cassandra.Data.Linq;
 using Core.Database.Interfaces;
@@ -51,6 +52,20 @@ namespace Core.Repositories.Implementations
         public IEnumerable<string> GetUniqueKeys()
         {
             return _connection.Mapper.Fetch<Tweet>().Select(x => x.Key).Distinct();
+        }
+
+        public IDictionary<string, long> QuantityByKey()
+        {
+            var all = _connection.Mapper.Fetch<Tweet>();
+            return all.Aggregate(ImmutableDictionary<string, long>.Empty, (acc, tweet) =>
+            {
+                long quantity;
+                if (acc.TryGetValue(tweet.Key, out quantity))
+                {
+                    return acc.SetItem(tweet.Key, quantity + 1);
+                }
+                return acc.Add(tweet.Key, 1);
+            });
         }
 
         public void Dispose()

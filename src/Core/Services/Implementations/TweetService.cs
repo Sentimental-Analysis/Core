@@ -62,6 +62,11 @@ namespace Core.Services.Implementations
             return Result<AnalysisScore>.Error();
         }
 
+        public Result<IDictionary<string, long>> GetQuantityByTweetKey()
+        {
+            return Result<IDictionary<string, long>>.Wrap(_unitOfWork.Tweets.QuantityByKey());
+        }
+
         public void Dispose()
         {
             if (_shouldBeDisposed)
