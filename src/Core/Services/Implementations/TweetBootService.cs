@@ -35,7 +35,7 @@ namespace Core.Services.Implementations
             var keyByLastTweetDate = keys.Select(key => Tuple.Create(key, _unitOfWork.Tweets.FindByKey(new TweetQuery(key)).Select(x => x.Date).Max()));
             var tweetsToAddition = keyByLastTweetDate.Select(x =>
             {
-                var apiResult = _unitOfWork.ApiTweets.Get(new TweetQuery(x.Item1, x.Item2));
+                var apiResult = _unitOfWork.ApiTweets.Get(new TweetQuery(x.Item1, x.Item2, 10000));
                 var analyzeResult = _sentimentalAnalysisService.Analyze(apiResult);
                 if (analyzeResult.IsSuccess)
                 {
